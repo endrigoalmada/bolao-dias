@@ -8,6 +8,9 @@ body{background:linear-gradient(160deg,#0a0f0d,#060a08);color:var(--txt);font-fa
 h1{font-size:25px;font-weight:900;letter-spacing:-.5px}h1 span{color:var(--green)}
 .sub{color:var(--mut);font-size:13px;margin:5px 0 16px}
 .demo{background:#3aa0ff14;border:1px solid #3aa0ff33;color:#9cc7ff;border-radius:9px;padding:8px 12px;font-size:12.5px;margin-bottom:16px}
+.eubar{margin-bottom:16px;font-size:13.5px;color:var(--txt);font-weight:700}
+.eubar select{background:var(--card);color:var(--txt);border:1px solid var(--me);border-radius:8px;padding:7px 11px;font-size:13.5px;font-weight:700;cursor:pointer}
+.eubar .euhint{color:var(--mut);font-weight:400;font-size:12px}
 /* ao vivo */
 .live{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:18px}
 .live h3{font-size:13px;letter-spacing:1px;color:var(--mut);margin-bottom:10px}
@@ -53,7 +56,8 @@ h1{font-size:25px;font-weight:900;letter-spacing:-.5px}h1 span{color:var(--green
 </style></head><body><div class="wrap">
 <h1>PLACAR <span>AO VIVO</span> · Bolão Dias 2026</h1>
 <div class="sub" id="meta"></div>
-<div class="demo">🔴 <b>Os 57 apostadores do Bolão Dias.</b> Atualizado em <b>11/06 às 10h08</b>. Clique num nome pra ver os palpites. Os botões <b>− +</b> são uma <b>simulação só no seu navegador</b> (não mudam o placar de todo mundo): brinque de "e se" e veja o ranking se reorganizar.</div>
+<div class="demo">🔴 <b>Os 57 apostadores do Bolão Dias.</b> Atualizado em <b>11/06 às 10h38</b>. Clique num nome pra ver os palpites. Os botões <b>− +</b> são uma <b>simulação só no seu navegador</b> (não mudam o placar de todo mundo): brinque de "e se" e veja o ranking se reorganizar.</div>
+<div class="eubar">👤 Quem é você? <select id="euSel"></select> <span class="euhint">(destaca seu nome, fica salvo só no seu aparelho)</span></div>
 <div class="live"><h3>⚽ <b>AO VIVO</b> — ajuste o placar e o ranking se move</h3><div class="gsel" id="gsel"></div></div>
 <div id="board"></div>
 </div>
@@ -86,8 +90,8 @@ const board=document.getElementById("board");
 const rowEls={}; let lastRank={};
 function ensureRows(){
   for(const p of DATA.participantes){
-    const el=document.createElement("div"); el.className="row"+(p.e?" me":"");
-    el.innerHTML=`<div class="pos"></div><div class="nm">${p.n}${p.e?'<span class="tag">você</span>':''}<span class="mv"></span></div><div class="pts"></div><div class="acc"><div class="acc-in"></div></div>`;
+    const el=document.createElement("div"); el.className="row";
+    el.innerHTML=`<div class="pos"></div><div class="nm">${p.n}<span class="metag"></span><span class="mv"></span></div><div class="pts"></div><div class="acc"><div class="acc-in"></div></div>`;
     el.onclick=()=>{el.classList.toggle("open"); if(el.classList.contains("open")) fillAcc(p,el);};
     rowEls[p.n]=el; board.appendChild(el);
   }
@@ -115,8 +119,9 @@ function render(){
   const first={}; for(const n in rowEls) first[n]=rowEls[n].getBoundingClientRect().top;
   ranking.forEach((r,i)=>board.appendChild(rowEls[r.p.n])); // reordena DOM
   ranking.forEach((r,i)=>{
-    const el=rowEls[r.p.n], pos=i+1;
-    el.className="row"+(r.p.e?" me":"")+(pos<=3&&r.s>0?" r"+pos:"")+(el.classList.contains("open")?" open":"");
+    const el=rowEls[r.p.n], pos=i+1, sou=(r.p.n===meu);
+    el.className="row"+(sou?" me":"")+(pos<=3&&r.s>0?" r"+pos:"")+(el.classList.contains("open")?" open":"");
+    el.querySelector(".metag").innerHTML=sou?'<span class="tag">você</span>':'';
     el.querySelector(".pos").textContent=pos+"º";
     el.querySelector(".pts").innerHTML=`${r.s}<small>PTS</small>`;
     const mv=el.querySelector(".mv");
@@ -144,5 +149,12 @@ function drawLive(){
      <div class="ln" style="margin-top:4px"><span class="nm">${j.a}</span><span class="stp"><button onclick="event.stopPropagation();setSc('${j.id}',0,-1)">−</button><span class="sc">${r?r[1]:0}</span><button onclick="event.stopPropagation();setSc('${j.id}',0,1)">+</button></span></div>
      ${r?`<div class="clr" onclick="clrSc('${j.id}')">✕ limpar</div>`:''}</div>`;}).join("");
 }
-ensureRows(); drawLive(); render();
+let meu = (window.localStorage && localStorage.getItem('bd_eu')) || '';
+function initEu(){
+  const s=document.getElementById('euSel'); if(!s) return;
+  const names=DATA.participantes.map(p=>p.n).sort((a,b)=>a.localeCompare(b));
+  s.innerHTML='<option value="">— escolha seu nome —</option>'+names.map(n=>`<option value="${n}"${n===meu?' selected':''}>${n}</option>`).join('');
+  s.onchange=()=>{meu=s.value; try{localStorage.setItem('bd_eu',meu)}catch(e){}; render();};
+}
+ensureRows(); initEu(); drawLive(); render();
 </script></body></html>
