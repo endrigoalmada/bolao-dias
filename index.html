@@ -58,9 +58,9 @@ h1{font-size:22px;font-weight:900;letter-spacing:-.5px}h1 span{color:var(--green
 <img class="hero" src="banner.png" alt="Bolão do Dias - Copa do Mundo 2026">
 <h1>🔴 Placar <span>ao vivo</span></h1>
 <div class="sub" id="meta"></div>
-<div class="demo">🔴 <b>Os 57 apostadores do Bolão Dias.</b> Atualizado em <b>11/06 às 18h07</b>. Clique num nome pra ver os palpites. Os botões <b>− +</b> são uma <b>simulação só no seu navegador</b> (não mudam o placar de todo mundo): brinque de "e se" e veja o ranking se reorganizar.</div>
+<div class="demo">🔴 <b>Placar automático, ao vivo.</b> Os resultados entram sozinhos pouco depois de cada jogo (fonte: ESPN) e o ranking se reorganiza na sua tela sem precisar recarregar. Clique num nome pra ver os palpites, e escolha o seu ali em cima pra se destacar.</div>
 <div class="eubar">👤 Quem é você? <select id="euSel"></select> <span class="euhint">(destaca seu nome, fica salvo só no seu aparelho)</span></div>
-<div class="live"><h3>⚽ <b>AO VIVO</b> — ajuste o placar e o ranking se move</h3><div class="gsel" id="gsel"></div></div>
+<div class="live"><h3>⚽ <b>JOGOS</b> — resultados oficiais (entram automaticamente)</h3><div class="gsel" id="gsel"></div></div>
 <div id="board"></div>
 </div>
 <script>
@@ -136,20 +136,15 @@ function render(){
     if(dy){el.style.transition="none";el.style.transform=`translateY(${dy}px)`;requestAnimationFrame(()=>{el.style.transition="";el.style.transform="";});}}
   document.getElementById("meta").textContent=`${DATA.participantes.length} participantes · ${Object.keys(R).length} jogos computados · clique num nome pra ver os palpites`;
 }
-// ---- painel ao vivo ----
-function setSc(id,dh,da){const c=R[id]||[0,0];let h=Math.max(0,c[0]+dh),a=Math.max(0,c[1]+da);R[id]=[h,a];drawLive();render();}
-function clrSc(id){delete R[id];drawLive();render();}
+// ---- painel ao vivo (somente leitura: placares oficiais) ----
 function drawLive(){
   const sel=document.getElementById("gsel");
-  // mostra jogos da proxima data nao totalmente computada (ou os 8 primeiros sem resultado), + os ao vivo
-  const live=DATA.jogos.filter(j=>R[j.id]);
-  const next=DATA.jogos.filter(j=>!R[j.id]).slice(0,8);
-  const show=[...live, ...next].slice(0,12);
-  sel.innerHTML=show.map(j=>{const r=R[j.id];const on=r?" live-on":"";
-    return `<div class="gm${on}"><div class="dt">${fmtData(j.d)}${r?' · 🔴 ao vivo':''}</div>
-     <div class="ln"><span class="nm">${j.h}</span><span class="stp"><button onclick="event.stopPropagation();setSc('${j.id}',-1,0)">−</button><span class="sc">${r?r[0]:0}</span><button onclick="event.stopPropagation();setSc('${j.id}',1,0)">+</button></span></div>
-     <div class="ln" style="margin-top:4px"><span class="nm">${j.a}</span><span class="stp"><button onclick="event.stopPropagation();setSc('${j.id}',0,-1)">−</button><span class="sc">${r?r[1]:0}</span><button onclick="event.stopPropagation();setSc('${j.id}',0,1)">+</button></span></div>
-     ${r?`<div class="clr" onclick="clrSc('${j.id}')">✕ limpar</div>`:''}</div>`;}).join("");
+  const fin=DATA.jogos.filter(j=>R[j.id]).slice(-6);
+  const next=DATA.jogos.filter(j=>!R[j.id]).slice(0,Math.max(2,8-fin.length));
+  sel.innerHTML=[...fin,...next].map(j=>{const r=R[j.id];
+    return `<div class="gm${r?' live-on':''}"><div class="dt">${fmtData(j.d)}${r?' · ✓ encerrado':''}</div>
+     <div class="ln"><span class="nm">${j.h}</span><span class="sc">${r?r[0]:'–'}</span></div>
+     <div class="ln" style="margin-top:4px"><span class="nm">${j.a}</span><span class="sc">${r?r[1]:'–'}</span></div></div>`;}).join("");
 }
 let meu = (window.localStorage && localStorage.getItem('bd_eu')) || '';
 function initEu(){
@@ -158,5 +153,17 @@ function initEu(){
   s.innerHTML='<option value="">— escolha seu nome —</option>'+names.map(n=>`<option value="${n}"${n===meu?' selected':''}>${n}</option>`).join('');
   s.onchange=()=>{meu=s.value; try{localStorage.setItem('bd_eu',meu)}catch(e){}; render();};
 }
+// busca os resultados oficiais e atualiza o ranking sozinho a cada 60s
+async function loadResults(){
+  try{
+    const resp=await fetch('resultados.json?t='+Date.now(),{cache:'no-store'});
+    if(!resp.ok) return;
+    const j=await resp.json();
+    for(const k in R) delete R[k];
+    Object.assign(R,j);
+    drawLive(); render();
+  }catch(e){}
+}
 ensureRows(); initEu(); drawLive(); render();
+loadResults(); setInterval(loadResults, 60000);
 </script></body></html>

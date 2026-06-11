@@ -1,0 +1,434 @@
+[
+{
+"key": "Mexico|South Africa",
+"home": "Mexico",
+"away": "South Africa",
+"date": "2026-06-11"
+},
+{
+"key": "South Korea|Czech Republic",
+"home": "South Korea",
+"away": "Czech Republic",
+"date": "2026-06-11"
+},
+{
+"key": "Canada|Bosnia and Herzegovina",
+"home": "Canada",
+"away": "Bosnia and Herzegovina",
+"date": "2026-06-12"
+},
+{
+"key": "United States|Paraguay",
+"home": "United States",
+"away": "Paraguay",
+"date": "2026-06-12"
+},
+{
+"key": "Qatar|Switzerland",
+"home": "Qatar",
+"away": "Switzerland",
+"date": "2026-06-13"
+},
+{
+"key": "Brazil|Morocco",
+"home": "Brazil",
+"away": "Morocco",
+"date": "2026-06-13"
+},
+{
+"key": "Haiti|Scotland",
+"home": "Haiti",
+"away": "Scotland",
+"date": "2026-06-13"
+},
+{
+"key": "Australia|Turkey",
+"home": "Australia",
+"away": "Turkey",
+"date": "2026-06-13"
+},
+{
+"key": "Germany|Curaçao",
+"home": "Germany",
+"away": "Curaçao",
+"date": "2026-06-14"
+},
+{
+"key": "Ivory Coast|Ecuador",
+"home": "Ivory Coast",
+"away": "Ecuador",
+"date": "2026-06-14"
+},
+{
+"key": "Netherlands|Japan",
+"home": "Netherlands",
+"away": "Japan",
+"date": "2026-06-14"
+},
+{
+"key": "Sweden|Tunisia",
+"home": "Sweden",
+"away": "Tunisia",
+"date": "2026-06-14"
+},
+{
+"key": "Belgium|Egypt",
+"home": "Belgium",
+"away": "Egypt",
+"date": "2026-06-15"
+},
+{
+"key": "Iran|New Zealand",
+"home": "Iran",
+"away": "New Zealand",
+"date": "2026-06-15"
+},
+{
+"key": "Spain|Cape Verde",
+"home": "Spain",
+"away": "Cape Verde",
+"date": "2026-06-15"
+},
+{
+"key": "Saudi Arabia|Uruguay",
+"home": "Saudi Arabia",
+"away": "Uruguay",
+"date": "2026-06-15"
+},
+{
+"key": "France|Senegal",
+"home": "France",
+"away": "Senegal",
+"date": "2026-06-16"
+},
+{
+"key": "Iraq|Norway",
+"home": "Iraq",
+"away": "Norway",
+"date": "2026-06-16"
+},
+{
+"key": "Argentina|Algeria",
+"home": "Argentina",
+"away": "Algeria",
+"date": "2026-06-16"
+},
+{
+"key": "Austria|Jordan",
+"home": "Austria",
+"away": "Jordan",
+"date": "2026-06-16"
+},
+{
+"key": "Portugal|DR Congo",
+"home": "Portugal",
+"away": "DR Congo",
+"date": "2026-06-17"
+},
+{
+"key": "Uzbekistan|Colombia",
+"home": "Uzbekistan",
+"away": "Colombia",
+"date": "2026-06-17"
+},
+{
+"key": "England|Croatia",
+"home": "England",
+"away": "Croatia",
+"date": "2026-06-17"
+},
+{
+"key": "Ghana|Panama",
+"home": "Ghana",
+"away": "Panama",
+"date": "2026-06-17"
+},
+{
+"key": "Czech Republic|South Africa",
+"home": "Czech Republic",
+"away": "South Africa",
+"date": "2026-06-18"
+},
+{
+"key": "Mexico|South Korea",
+"home": "Mexico",
+"away": "South Korea",
+"date": "2026-06-18"
+},
+{
+"key": "Switzerland|Bosnia and Herzegovina",
+"home": "Switzerland",
+"away": "Bosnia and Herzegovina",
+"date": "2026-06-18"
+},
+{
+"key": "Canada|Qatar",
+"home": "Canada",
+"away": "Qatar",
+"date": "2026-06-18"
+},
+{
+"key": "Scotland|Morocco",
+"home": "Scotland",
+"away": "Morocco",
+"date": "2026-06-19"
+},
+{
+"key": "Brazil|Haiti",
+"home": "Brazil",
+"away": "Haiti",
+"date": "2026-06-19"
+},
+{
+"key": "United States|Australia",
+"home": "United States",
+"away": "Australia",
+"date": "2026-06-19"
+},
+{
+"key": "Turkey|Paraguay",
+"home": "Turkey",
+"away": "Paraguay",
+"date": "2026-06-19"
+},
+{
+"key": "Germany|Ivory Coast",
+"home": "Germany",
+"away": "Ivory Coast",
+"date": "2026-06-20"
+},
+{
+"key": "Ecuador|Curaçao",
+"home": "Ecuador",
+"away": "Curaçao",
+"date": "2026-06-20"
+},
+{
+"key": "Netherlands|Sweden",
+"home": "Netherlands",
+"away": "Sweden",
+"date": "2026-06-20"
+},
+{
+"key": "Tunisia|Japan",
+"home": "Tunisia",
+"away": "Japan",
+"date": "2026-06-20"
+},
+{
+"key": "Belgium|Iran",
+"home": "Belgium",
+"away": "Iran",
+"date": "2026-06-21"
+},
+{
+"key": "New Zealand|Egypt",
+"home": "New Zealand",
+"away": "Egypt",
+"date": "2026-06-21"
+},
+{
+"key": "Spain|Saudi Arabia",
+"home": "Spain",
+"away": "Saudi Arabia",
+"date": "2026-06-21"
+},
+{
+"key": "Uruguay|Cape Verde",
+"home": "Uruguay",
+"away": "Cape Verde",
+"date": "2026-06-21"
+},
+{
+"key": "France|Iraq",
+"home": "France",
+"away": "Iraq",
+"date": "2026-06-22"
+},
+{
+"key": "Norway|Senegal",
+"home": "Norway",
+"away": "Senegal",
+"date": "2026-06-22"
+},
+{
+"key": "Argentina|Austria",
+"home": "Argentina",
+"away": "Austria",
+"date": "2026-06-22"
+},
+{
+"key": "Jordan|Algeria",
+"home": "Jordan",
+"away": "Algeria",
+"date": "2026-06-22"
+},
+{
+"key": "Portugal|Uzbekistan",
+"home": "Portugal",
+"away": "Uzbekistan",
+"date": "2026-06-23"
+},
+{
+"key": "Colombia|DR Congo",
+"home": "Colombia",
+"away": "DR Congo",
+"date": "2026-06-23"
+},
+{
+"key": "England|Ghana",
+"home": "England",
+"away": "Ghana",
+"date": "2026-06-23"
+},
+{
+"key": "Panama|Croatia",
+"home": "Panama",
+"away": "Croatia",
+"date": "2026-06-23"
+},
+{
+"key": "Mexico|Czech Republic",
+"home": "Mexico",
+"away": "Czech Republic",
+"date": "2026-06-24"
+},
+{
+"key": "South Africa|South Korea",
+"home": "South Africa",
+"away": "South Korea",
+"date": "2026-06-24"
+},
+{
+"key": "Canada|Switzerland",
+"home": "Canada",
+"away": "Switzerland",
+"date": "2026-06-24"
+},
+{
+"key": "Bosnia and Herzegovina|Qatar",
+"home": "Bosnia and Herzegovina",
+"away": "Qatar",
+"date": "2026-06-24"
+},
+{
+"key": "Scotland|Brazil",
+"home": "Scotland",
+"away": "Brazil",
+"date": "2026-06-24"
+},
+{
+"key": "Morocco|Haiti",
+"home": "Morocco",
+"away": "Haiti",
+"date": "2026-06-24"
+},
+{
+"key": "United States|Turkey",
+"home": "United States",
+"away": "Turkey",
+"date": "2026-06-25"
+},
+{
+"key": "Paraguay|Australia",
+"home": "Paraguay",
+"away": "Australia",
+"date": "2026-06-25"
+},
+{
+"key": "Curaçao|Ivory Coast",
+"home": "Curaçao",
+"away": "Ivory Coast",
+"date": "2026-06-25"
+},
+{
+"key": "Ecuador|Germany",
+"home": "Ecuador",
+"away": "Germany",
+"date": "2026-06-25"
+},
+{
+"key": "Japan|Sweden",
+"home": "Japan",
+"away": "Sweden",
+"date": "2026-06-25"
+},
+{
+"key": "Tunisia|Netherlands",
+"home": "Tunisia",
+"away": "Netherlands",
+"date": "2026-06-25"
+},
+{
+"key": "Egypt|Iran",
+"home": "Egypt",
+"away": "Iran",
+"date": "2026-06-26"
+},
+{
+"key": "New Zealand|Belgium",
+"home": "New Zealand",
+"away": "Belgium",
+"date": "2026-06-26"
+},
+{
+"key": "Cape Verde|Saudi Arabia",
+"home": "Cape Verde",
+"away": "Saudi Arabia",
+"date": "2026-06-26"
+},
+{
+"key": "Uruguay|Spain",
+"home": "Uruguay",
+"away": "Spain",
+"date": "2026-06-26"
+},
+{
+"key": "Norway|France",
+"home": "Norway",
+"away": "France",
+"date": "2026-06-26"
+},
+{
+"key": "Senegal|Iraq",
+"home": "Senegal",
+"away": "Iraq",
+"date": "2026-06-26"
+},
+{
+"key": "Algeria|Austria",
+"home": "Algeria",
+"away": "Austria",
+"date": "2026-06-27"
+},
+{
+"key": "Jordan|Argentina",
+"home": "Jordan",
+"away": "Argentina",
+"date": "2026-06-27"
+},
+{
+"key": "Colombia|Portugal",
+"home": "Colombia",
+"away": "Portugal",
+"date": "2026-06-27"
+},
+{
+"key": "DR Congo|Uzbekistan",
+"home": "DR Congo",
+"away": "Uzbekistan",
+"date": "2026-06-27"
+},
+{
+"key": "Panama|England",
+"home": "Panama",
+"away": "England",
+"date": "2026-06-27"
+},
+{
+"key": "Croatia|Ghana",
+"home": "Croatia",
+"away": "Ghana",
+"date": "2026-06-27"
+}
+]

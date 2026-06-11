@@ -1,0 +1,38 @@
+name: Atualizar placar (resultados ao vivo)
+
+# Roda a cada 10 min, busca os resultados encerrados na ESPN e atualiza
+# resultados.json. So commita se algo mudou. Pode rodar na mao em "Run workflow".
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: placar
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Buscar resultados na ESPN
+        run: node scripts/fetch-results.mjs
+      - name: Commitar se houve mudanca
+        run: |
+          git config user.name "Placar Bot"
+          git config user.email "actions@github.com"
+          git add resultados.json
+          if git diff --staged --quiet; then
+            echo "Sem mudancas."
+          else
+            git commit -m "placar: resultados atualizados automaticamente"
+            git push
+            echo "Resultados atualizados e publicados."
+          fi
