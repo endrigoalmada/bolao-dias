@@ -27,6 +27,9 @@ h1{font-size:22px;font-weight:900;letter-spacing:-.5px}h1 span{color:var(--green
 .gm .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gm .clr{margin-top:6px;font-size:10.5px;color:var(--mut);cursor:pointer;text-align:center}
 .gm.live-on{border-color:#ff5a6e;box-shadow:0 0 16px #ff5a6e22}
+.gm.sim-on{border-color:#b07cff;box-shadow:0 0 16px #b07cff33}
+.gm.simclr{display:flex;align-items:center;justify-content:center;text-align:center;color:#c9a7ff;cursor:pointer;font-weight:800;font-size:12px;min-width:84px;border-color:#b07cff66}
+.gm.simclr:hover{background:#b07cff22}
 /* board */
 #board{position:relative}
 .row{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:12px;background:var(--card);
@@ -58,9 +61,9 @@ h1{font-size:22px;font-weight:900;letter-spacing:-.5px}h1 span{color:var(--green
 <img class="hero" src="banner.png" alt="Bolão do Dias - Copa do Mundo 2026">
 <h1>🔴 Placar <span>ao vivo</span></h1>
 <div class="sub" id="meta"></div>
-<div class="demo">🔴 <b>Placar automático, ao vivo.</b> Os resultados entram sozinhos pouco depois de cada jogo (fonte: ESPN) e o ranking se reorganiza na sua tela sem precisar recarregar. Clique num nome pra ver os palpites, e escolha o seu ali em cima pra se destacar.</div>
+<div class="demo">🔴 <b>Placar automático, ao vivo.</b> Os resultados oficiais entram sozinhos pouco depois de cada jogo (fonte: ESPN) e o ranking se reorganiza sem recarregar. 🔮 Quer brincar de "e se"? Use os botões <b>− +</b> nos jogos pra <b>simular</b> (só no seu aparelho, não muda o de ninguém). Clique num nome pra ver os palpites, e escolha o seu acima pra se destacar.</div>
 <div class="eubar">👤 Quem é você? <select id="euSel"></select> <span class="euhint">(destaca seu nome, fica salvo só no seu aparelho)</span></div>
-<div class="live"><h3>⚽ <b>JOGOS</b> — resultados oficiais (entram automaticamente)</h3><div class="gsel" id="gsel"></div></div>
+<div class="live"><h3>⚽ <b>JOGOS</b> — ✓ oficiais entram sozinhos · 🔮 simule com − +</h3><div class="gsel" id="gsel"></div></div>
 <div id="board"></div>
 </div>
 <script>
@@ -75,7 +78,13 @@ function pts(pred, real, fase){
   if(pred[0]==real[0]||pred[1]==real[1]||(pred[0]-pred[1])==(real[0]-real[1])) p+=bon;
   return p;
 }
-const R = DATA.resultados;
+// oficial = resultados reais (robo atualiza); sim = simulacao local do usuario;
+// R = efetivo (oficial + sim por cima). sim NUNCA e sobrescrito pelo robo.
+let oficial = Object.assign({}, DATA.resultados);
+let sim = {};
+const R = {};
+function rebuildR(){ for(const k in R) delete R[k]; Object.assign(R, oficial, sim); }
+rebuildR();
 const JMAP = Object.fromEntries(DATA.jogos.map(j=>[j.id,j]));
 function scoreOf(part){
   let s=0, cr=0;
@@ -136,15 +145,22 @@ function render(){
     if(dy){el.style.transition="none";el.style.transform=`translateY(${dy}px)`;requestAnimationFrame(()=>{el.style.transition="";el.style.transform="";});}}
   document.getElementById("meta").textContent=`${DATA.participantes.length} participantes · ${Object.keys(R).length} jogos computados · clique num nome pra ver os palpites`;
 }
-// ---- painel ao vivo (somente leitura: placares oficiais) ----
+// ---- painel: resultados oficiais (✓) + simulacao local (🔮, botoes − +) ----
+function setSc(id,dh,da){const b=sim[id]||oficial[id]||[0,0];sim[id]=[Math.max(0,b[0]+dh),Math.max(0,b[1]+da)];rebuildR();drawLive();render();}
+function clrSc(id){delete sim[id];rebuildR();drawLive();render();}
+function limparSim(){sim={};rebuildR();drawLive();render();}
 function drawLive(){
   const sel=document.getElementById("gsel");
-  const fin=DATA.jogos.filter(j=>R[j.id]).slice(-6);
-  const next=DATA.jogos.filter(j=>!R[j.id]).slice(0,Math.max(2,8-fin.length));
-  sel.innerHTML=[...fin,...next].map(j=>{const r=R[j.id];
-    return `<div class="gm${r?' live-on':''}"><div class="dt">${fmtData(j.d)}${r?' · ✓ encerrado':''}</div>
-     <div class="ln"><span class="nm">${j.h}</span><span class="sc">${r?r[0]:'–'}</span></div>
-     <div class="ln" style="margin-top:4px"><span class="nm">${j.a}</span><span class="sc">${r?r[1]:'–'}</span></div></div>`;}).join("");
+  const fin=DATA.jogos.filter(j=>oficial[j.id]).slice(-5);
+  const next=DATA.jogos.filter(j=>!oficial[j.id]).slice(0,Math.max(3,9-fin.length));
+  const temSim=Object.keys(sim).length;
+  sel.innerHTML=(temSim?`<div class="gm simclr" onclick="limparSim()">🔮 limpar<br>simulação</div>`:"")+
+   [...fin,...next].map(j=>{const r=R[j.id];const ofic=oficial[j.id];const isim=sim[j.id];
+    const badge=isim?' · 🔮 simulado':(ofic?' · ✓ encerrado':'');
+    return `<div class="gm${ofic?' live-on':''}${isim?' sim-on':''}"><div class="dt">${fmtData(j.d)}${badge}</div>
+     <div class="ln"><span class="nm">${j.h}</span><span class="stp"><button onclick="setSc('${j.id}',-1,0)">−</button><span class="sc">${r?r[0]:0}</span><button onclick="setSc('${j.id}',1,0)">+</button></span></div>
+     <div class="ln" style="margin-top:4px"><span class="nm">${j.a}</span><span class="stp"><button onclick="setSc('${j.id}',0,-1)">−</button><span class="sc">${r?r[1]:0}</span><button onclick="setSc('${j.id}',0,1)">+</button></span></div>
+     ${isim?`<div class="clr" onclick="clrSc('${j.id}')">✕ voltar ao oficial</div>`:''}</div>`;}).join("");
 }
 let meu = (window.localStorage && localStorage.getItem('bd_eu')) || '';
 function initEu(){
@@ -159,8 +175,7 @@ async function loadResults(){
     const resp=await fetch('resultados.json?t='+Date.now(),{cache:'no-store'});
     if(!resp.ok) return;
     const j=await resp.json();
-    for(const k in R) delete R[k];
-    Object.assign(R,j);
+    oficial=j; rebuildR();
     drawLive(); render();
   }catch(e){}
 }
