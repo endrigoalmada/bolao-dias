@@ -1,10 +1,12 @@
 name: Atualizar placar (resultados ao vivo)
 
-# Roda a cada 10 min, busca os resultados encerrados na ESPN e atualiza
-# resultados.json. So commita se algo mudou. Pode rodar na mao em "Run workflow".
+# BACKUP do historico. O tempo real vem da PROPRIA PAGINA, que busca a ESPN ao
+# vivo no navegador. Este robo so arquiva os resultados em resultados.json algumas
+# vezes por dia (cold-start e jogos antigos). So commita se algo mudou.
+# Pode rodar na mao em "Run workflow" se quiser forcar.
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "0 */6 * * *"   # 4x ao dia (00/06/12/18 UTC), apenas arquivamento
   workflow_dispatch:
 
 permissions:

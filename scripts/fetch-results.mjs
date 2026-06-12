@@ -47,9 +47,9 @@ const resultados = existsSync("resultados.json")
   ? JSON.parse(readFileSync("resultados.json", "utf-8"))
   : {};
 
-// consulta ontem e hoje (UTC) — cobre jogos noturnos nos EUA que viram o dia
+// consulta os ultimos 3 dias (UTC) — cobre jogos noturnos e folga do cron espacado
 const now = new Date();
-const dates = [-1, 0].map((off) => {
+const dates = [-2, -1, 0].map((off) => {
   const d = new Date(now);
   d.setUTCDate(d.getUTCDate() + off);
   return yyyymmdd(d);
