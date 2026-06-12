@@ -30,6 +30,9 @@ h1{font-size:22px;font-weight:900;letter-spacing:-.5px}h1 span{color:var(--green
 .gm.sim-on{border-color:#b07cff;box-shadow:0 0 16px #b07cff33}
 .gm.simclr{display:flex;align-items:center;justify-content:center;text-align:center;color:#c9a7ff;cursor:pointer;font-weight:800;font-size:12px;min-width:84px;border-color:#b07cff66}
 .gm.simclr:hover{background:#b07cff22}
+.hltb{display:flex;align-items:center;gap:7px;margin-top:7px;padding-top:7px;border-top:1px solid #ffffff0f;text-decoration:none;color:#ff9aa6;font-size:11px;font-weight:800}
+.hltb img{width:62px;height:35px;object-fit:cover;border-radius:5px;flex:0 0 auto}
+.hltb:hover{color:#ff5a6e}
 /* board */
 #board{position:relative}
 .row{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:12px;background:var(--card);
@@ -169,7 +172,8 @@ function drawLive(){
     return `<div class="gm${ofic?' live-on':''}${isim?' sim-on':''}"><div class="dt">${fmtData(j.d)}${badge}</div>
      <div class="ln"><span class="nm">${j.h}</span><span class="stp"><button onclick="setSc('${j.id}',-1,0)">−</button><span class="sc">${r?r[0]:0}</span><button onclick="setSc('${j.id}',1,0)">+</button></span></div>
      <div class="ln" style="margin-top:4px"><span class="nm">${j.a}</span><span class="stp"><button onclick="setSc('${j.id}',0,-1)">−</button><span class="sc">${r?r[1]:0}</span><button onclick="setSc('${j.id}',0,1)">+</button></span></div>
-     ${isim?`<div class="clr" onclick="clrSc('${j.id}')">✕ voltar ao oficial</div>`:''}</div>`;}).join("");
+     ${isim?`<div class="clr" onclick="clrSc('${j.id}')">✕ voltar ao oficial</div>`:''}
+     ${(ofic&&hl[j.id])?`<a class="hltb" href="https://youtu.be/${hl[j.id]}" target="_blank" rel="noopener"><img loading="lazy" src="https://i.ytimg.com/vi/${hl[j.id]}/mqdefault.jpg" alt="melhores momentos"><span>▶ melhores momentos</span></a>`:''}</div>`;}).join("");
 }
 let meu = (window.localStorage && localStorage.getItem('bd_eu')) || '';
 function initEu(){
@@ -203,14 +207,20 @@ async function fetchEspn(dia){
     return out;
   }catch(e){ return {}; }
 }
+let hl={};
 async function loadResults(){
   let base={};
   try{ const r=await fetch('resultados.json?t='+Date.now(),{cache:'no-store'}); if(r.ok) base=await r.json(); }catch(e){}
+  try{ const rh=await fetch('highlights.json?t='+Date.now(),{cache:'no-store'}); if(rh.ok) hl=await rh.json(); }catch(e){}
   const now=new Date();
   const dias=[0,-1,-2].map(o=>{const d=new Date(now); d.setUTCDate(d.getUTCDate()+o); return ymd(d);});
   for(const dia of dias){ Object.assign(base, await fetchEspn(dia)); }
   oficial=base; rebuildR(); drawLive(); render();
 }
+// fix mobile: manda a altura pro iframe pai se ajustar (rolagem natural no celular)
+function postHeight(){try{parent.postMessage({bolaodias:1,height:document.body.scrollHeight},'*');}catch(e){}}
+window.addEventListener('load',postHeight); setInterval(postHeight,1200);
+try{new ResizeObserver(postHeight).observe(document.body);}catch(e){}
 ensureRows(); initEu(); drawLive(); render();
 loadResults(); setInterval(loadResults, 60000);
 </script></body></html>

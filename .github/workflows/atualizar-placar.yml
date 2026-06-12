@@ -6,7 +6,11 @@ name: Atualizar placar (resultados ao vivo)
 # Pode rodar na mao em "Run workflow" se quiser forcar.
 on:
   schedule:
-    - cron: "0 */6 * * *"   # 4x ao dia (00/06/12/18 UTC), apenas arquivamento
+    # Slots derivados dos horarios REAIS dos jogos (kickoff + ~2h30 ate +3h30):
+    # roda so DEPOIS das partidas, ~30-90 min apos cada jogo, pra pescar os
+    # melhores momentos da CazeTV. Nada nas horas mortas (08-17 UTC).
+    - cron: "30 18-23,0-7 * * *"
+    - cron: "0 2-4 * * *"
   workflow_dispatch:
 
 permissions:
@@ -26,11 +30,13 @@ jobs:
           node-version: "20"
       - name: Buscar resultados na ESPN
         run: node scripts/fetch-results.mjs
+      - name: Buscar melhores momentos (CazéTV)
+        run: node scripts/fetch-highlights.mjs
       - name: Commitar se houve mudanca
         run: |
           git config user.name "Placar Bot"
           git config user.email "actions@github.com"
-          git add resultados.json
+          git add resultados.json highlights.json
           if git diff --staged --quiet; then
             echo "Sem mudancas."
           else
