@@ -31,11 +31,19 @@ const fxByKey = {}; fixtures.forEach(f => fxByKey[f.key] = f);
 
 async function searchYT(query) {
   try {
-    const r = await fetch("https://www.youtube.com/results?search_query=" + encodeURIComponent(query) + "&hl=pt", { headers: { "User-Agent": UA } });
-    if (!r.ok) return [];
+    const r = await fetch("https://www.youtube.com/results?search_query=" + encodeURIComponent(query) + "&hl=pt&gl=BR", {
+      headers: {
+        "User-Agent": UA,
+        "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
+        // cookie de consentimento: faz o YouTube servir a pagina real (e nao o
+        // muro de consentimento) para IPs de datacenter como os do GitHub Actions
+        "Cookie": "SOCS=CAISEwgDEgk0ODE3Nzk3MjQaAmVuIAEaBgiA_LyaBg; CONSENT=YES+cb.20210328-17-p0.en+FX+667"
+      }
+    });
+    if (!r.ok) { console.log("  (HTTP", r.status, "na busca)"); return []; }
     const h = await r.text();
     const m = h.match(/ytInitialData\s*=\s*(\{.+?\});<\/script>/s);
-    if (!m) return [];
+    if (!m) { console.log("  (sem ytInitialData - possivel bloqueio do YouTube)"); return []; }
     let data; try { data = JSON.parse(m[1]); } catch (e) { return []; }
     const out = [];
     (function walk(o) {
