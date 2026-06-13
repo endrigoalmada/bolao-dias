@@ -47,6 +47,11 @@ h1{font-size:22px;font-weight:900;letter-spacing:-.5px}h1 span{color:var(--green
 .row.r3{border-color:var(--bronze);box-shadow:0 0 18px #cd8b5a1f}
 .row.lanterna{border-color:#ff5a6e;box-shadow:0 0 22px #ff5a6e22;background:linear-gradient(90deg,#1c0f12,#0e1c16)}
 .tag.lant{background:#ff5a6e26;color:#ff9aa6}
+.tag.crv{background:#2bd47a26;color:#7df0b3}
+@keyframes shimmer{0%,100%{box-shadow:0 0 5px #2bd47a44}50%{box-shadow:0 0 22px #2bd47a,0 0 36px #2bd47a99}}
+.row.cravando{border-color:var(--green);animation:shimmer 1.05s ease-in-out infinite}
+@keyframes lpulse{0%,100%{box-shadow:0 0 8px #ff5a6e44}50%{box-shadow:0 0 20px #ff5a6eaa}}
+.gm.aovivo{border-color:#ff5a6e;animation:lpulse 1.2s ease-in-out infinite}
 .row.me{border-color:var(--me)}.row.me .nm{color:var(--me)}
 .nm{font-size:16px;font-weight:800}
 .tag{font-size:10px;background:#3aa0ff22;color:var(--me);border-radius:20px;padding:2px 7px;margin-left:7px}
@@ -86,12 +91,14 @@ function pts(pred, real, fase){
   if(pred[0]==real[0]||pred[1]==real[1]||(pred[0]-pred[1])==(real[0]-real[1])) p+=bon;
   return p;
 }
-// oficial = resultados reais (robo atualiza); sim = simulacao local do usuario;
-// R = efetivo (oficial + sim por cima). sim NUNCA e sobrescrito pelo robo.
+// oficial = jogos encerrados (robo); live = jogos EM ANDAMENTO (placar parcial);
+// sim = simulacao local. R = efetivo (oficial + live + sim por cima).
 let oficial = Object.assign({}, DATA.resultados);
+let live = {};       // placares ao vivo (jogo rolando)
+let liveMin = {};    // minuto/rotulo do jogo ao vivo
 let sim = {};
 const R = {};
-function rebuildR(){ for(const k in R) delete R[k]; Object.assign(R, oficial, sim); }
+function rebuildR(){ for(const k in R) delete R[k]; Object.assign(R, oficial, live, sim); }
 rebuildR();
 const JMAP = Object.fromEntries(DATA.jogos.map(j=>[j.id,j]));
 function scoreOf(part){
@@ -110,7 +117,7 @@ const rowEls={}; let lastRank={};
 function ensureRows(){
   for(const p of DATA.participantes){
     const el=document.createElement("div"); el.className="row";
-    el.innerHTML=`<div class="pos"></div><div class="nm">${p.n}<span class="metag"></span><span class="lanttag"></span><span class="mv"></span></div><div class="pts"></div><div class="acc"><div class="acc-in"></div></div>`;
+    el.innerHTML=`<div class="pos"></div><div class="nm">${p.n}<span class="metag"></span><span class="crav"></span><span class="lanttag"></span><span class="mv"></span></div><div class="pts"></div><div class="acc"><div class="acc-in"></div></div>`;
     el.onclick=()=>{el.classList.toggle("open"); if(el.classList.contains("open")) fillAcc(p,el);};
     rowEls[p.n]=el; board.appendChild(el);
   }
@@ -139,11 +146,17 @@ function render(){
   ranking.forEach((r,i)=>board.appendChild(rowEls[r.p.n])); // reordena DOM
   const N=ranking.length, maxPts=ranking[0]?ranking[0].s:0;
   const MEDAL=["🥇","🥈","🥉"];
+  // quem esta CRAVANDO o placar exato de um jogo AO VIVO neste momento
+  const cravando=new Set();
+  for(const gid in live){const sc=live[gid];
+    for(const p of DATA.participantes){const b=p.p[gid]; if(b&&b[0]===sc[0]&&b[1]===sc[1]) cravando.add(p.n);}}
   ranking.forEach((r,i)=>{
     const el=rowEls[r.p.n], pos=i+1, sou=(r.p.n===meu);
     const isLant = (pos===N && N>=6 && maxPts>0);   // lanterna so quando faz sentido
-    el.className="row"+(sou?" me":"")+(pos<=3&&r.s>0?" r"+pos:"")+(isLant?" lanterna":"")+(el.classList.contains("open")?" open":"");
+    const crav = cravando.has(r.p.n);
+    el.className="row"+(sou?" me":"")+(pos<=3&&r.s>0?" r"+pos:"")+(isLant?" lanterna":"")+(crav?" cravando":"")+(el.classList.contains("open")?" open":"");
     el.querySelector(".metag").innerHTML=sou?'<span class="tag">você</span>':'';
+    el.querySelector(".crav").innerHTML=crav?'<span class="tag crv">🔥 cravando</span>':'';
     el.querySelector(".lanttag").innerHTML=isLant?'<span class="tag lant">🥄 LANTERNA</span>':'';
     el.querySelector(".pos").innerHTML=(pos<=3&&r.s>0)?MEDAL[pos-1]:pos+"º";
     el.querySelector(".pts").innerHTML=`${r.s}<small>PTS</small>`;
@@ -163,13 +176,14 @@ function clrSc(id){delete sim[id];rebuildR();drawLive();render();}
 function limparSim(){sim={};rebuildR();drawLive();render();}
 function drawLive(){
   const sel=document.getElementById("gsel");
-  const fin=DATA.jogos.filter(j=>oficial[j.id]).slice(-5);
-  const next=DATA.jogos.filter(j=>!oficial[j.id]).slice(0,Math.max(3,9-fin.length));
+  const aovivo=DATA.jogos.filter(j=>live[j.id]);
+  const fin=DATA.jogos.filter(j=>oficial[j.id]).slice(-4);
+  const next=DATA.jogos.filter(j=>!oficial[j.id]&&!live[j.id]).slice(0,Math.max(2,8-aovivo.length-fin.length));
   const temSim=Object.keys(sim).length;
   sel.innerHTML=(temSim?`<div class="gm simclr" onclick="limparSim()">🔮 limpar<br>simulação</div>`:"")+
-   [...fin,...next].map(j=>{const r=R[j.id];const ofic=oficial[j.id];const isim=sim[j.id];
-    const badge=isim?' · 🔮 simulado':(ofic?' · ✓ encerrado':'');
-    return `<div class="gm${ofic?' live-on':''}${isim?' sim-on':''}"><div class="dt">${fmtData(j.d)}${badge}</div>
+   [...aovivo,...fin,...next].map(j=>{const r=R[j.id];const ofic=oficial[j.id];const isim=sim[j.id];const lv=live[j.id];
+    const badge=isim?' · 🔮 simulado':(lv?` · 🔴 ${liveMin[j.id]||'ao vivo'}`:(ofic?' · ✓ encerrado':''));
+    return `<div class="gm${lv?' aovivo':(ofic?' live-on':'')}${isim?' sim-on':''}"><div class="dt">${fmtData(j.d)}${badge}</div>
      <div class="ln"><span class="nm">${j.h}</span><span class="stp"><button onclick="setSc('${j.id}',-1,0)">−</button><span class="sc">${r?r[0]:0}</span><button onclick="setSc('${j.id}',1,0)">+</button></span></div>
      <div class="ln" style="margin-top:4px"><span class="nm">${j.a}</span><span class="stp"><button onclick="setSc('${j.id}',0,-1)">−</button><span class="sc">${r?r[1]:0}</span><button onclick="setSc('${j.id}',0,1)">+</button></span></div>
      ${isim?`<div class="clr" onclick="clrSc('${j.id}')">✕ voltar ao oficial</div>`:''}
@@ -194,18 +208,23 @@ const canonTeam=n=>ALIAS_C[normC(n)]||CANON[normC(n)]||null;
 const ymd=d=>d.toISOString().slice(0,10).replace(/-/g,"");
 async function fetchEspn(dia){
   try{
-    const r=await fetch(ESPN+dia); if(!r.ok) return {};
-    const j=await r.json(); const out={};
+    const r=await fetch(ESPN+dia); if(!r.ok) return {fin:{},liv:{},min:{}};
+    const j=await r.json(); const fin={},liv={},min={};
     (j.events||[]).forEach(e=>{
-      const c=(e.competitions||[])[0]; if(!c||(c.status&&c.status.type&&c.status.type.name)!=="STATUS_FULL_TIME") return;
+      const c=(e.competitions||[])[0]; if(!c) return;
+      const st=(c.status&&c.status.type&&c.status.type.name)||"";
       const sc={}; let ok=true;
       (c.competitors||[]).forEach(x=>{const cn=canonTeam(x.team&&x.team.displayName); if(!cn){ok=false;return;} sc[cn]=parseInt(x.score,10);});
       if(!ok) return; const ts=Object.keys(sc); if(ts.length!==2) return;
       const id=PAIR[[ts[0],ts[1]].sort().join("~")]; if(!id) return;
-      const[hh,aa]=id.split("|"); out[id]=[sc[hh],sc[aa]];
+      const[hh,aa]=id.split("|"); const val=[sc[hh],sc[aa]];
+      if(st==="STATUS_FULL_TIME"){ fin[id]=val; }
+      else if(/HALF|IN_PROGRESS|EXTRA|SHOOT|END_OF_REG/i.test(st)){
+        liv[id]=val; min[id]=(c.status&&c.status.type&&c.status.type.shortDetail)||(c.status&&c.status.displayClock)||"ao vivo";
+      }
     });
-    return out;
-  }catch(e){ return {}; }
+    return {fin,liv,min};
+  }catch(e){ return {fin:{},liv:{},min:{}}; }
 }
 let hl={};
 async function loadResults(){
@@ -214,13 +233,18 @@ async function loadResults(){
   try{ const rh=await fetch('highlights.json?t='+Date.now(),{cache:'no-store'}); if(rh.ok) hl=await rh.json(); }catch(e){}
   const now=new Date();
   const dias=[0,-1,-2].map(o=>{const d=new Date(now); d.setUTCDate(d.getUTCDate()+o); return ymd(d);});
-  for(const dia of dias){ Object.assign(base, await fetchEspn(dia)); }
-  oficial=base; rebuildR(); drawLive(); render();
+  let lv={}, lmin={};
+  for(const dia of dias){ const e=await fetchEspn(dia); Object.assign(base,e.fin); Object.assign(lv,e.liv); Object.assign(lmin,e.min); }
+  oficial=base; live=lv; liveMin=lmin; rebuildR(); drawLive(); render();
+  scheduleNext();
 }
+// polling adaptativo: rapido (25s) quando tem jogo rolando, calmo (60s) senao
+let pollT=null;
+function scheduleNext(){ clearTimeout(pollT); const fast=Object.keys(live).length>0; pollT=setTimeout(loadResults, fast?25000:60000); }
 // fix mobile: manda a altura pro iframe pai se ajustar (rolagem natural no celular)
 function postHeight(){try{parent.postMessage({bolaodias:1,height:document.body.scrollHeight},'*');}catch(e){}}
 window.addEventListener('load',postHeight); setInterval(postHeight,1200);
 try{new ResizeObserver(postHeight).observe(document.body);}catch(e){}
 ensureRows(); initEu(); drawLive(); render();
-loadResults(); setInterval(loadResults, 60000);
+loadResults();
 </script></body></html>
