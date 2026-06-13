@@ -31,20 +31,17 @@ const fxByKey = {}; fixtures.forEach(f => fxByKey[f.key] = f);
 
 async function searchYT(query) {
   try {
-    const r = await fetch("https://www.youtube.com/results?search_query=" + encodeURIComponent(query) + "&hl=pt&gl=BR", {
-      headers: {
-        "User-Agent": UA,
-        "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
-        // cookie de consentimento: faz o YouTube servir a pagina real (e nao o
-        // muro de consentimento) para IPs de datacenter como os do GitHub Actions
-        "Cookie": "SOCS=CAISEwgDEgk0ODE3Nzk3MjQaAmVuIAEaBgiA_LyaBg; CONSENT=YES+cb.20210328-17-p0.en+FX+667"
-      }
+    // InnerTube: API interna do YouTube (JSON limpo, funciona de servidor,
+    // ao contrario do scraping da pagina que o YouTube degrada para datacenters)
+    const KEY = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"; // chave publica do cliente web
+    const body = JSON.stringify({ context: { client: { clientName: "WEB", clientVersion: "2.20240101.00.00", hl: "pt", gl: "BR" } }, query });
+    const r = await fetch("https://www.youtube.com/youtubei/v1/search?key=" + KEY, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "User-Agent": UA, "Accept-Language": "pt-BR" },
+      body
     });
-    if (!r.ok) { console.log("  (HTTP", r.status, "na busca)"); return []; }
-    const h = await r.text();
-    const m = h.match(/ytInitialData\s*=\s*(\{.+?\});<\/script>/s);
-    if (!m) { console.log("  (sem ytInitialData - possivel bloqueio do YouTube)"); return []; }
-    let data; try { data = JSON.parse(m[1]); } catch (e) { return []; }
+    if (!r.ok) { console.log("  (HTTP", r.status, "innertube)"); return []; }
+    const data = await r.json();
     const out = [];
     (function walk(o) {
       if (!o || typeof o !== "object") return;
