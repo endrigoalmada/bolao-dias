@@ -30,10 +30,24 @@ const highlights = existsSync("highlights.json") ? JSON.parse(readFileSync("high
 const fxByKey = {}; fixtures.forEach(f => fxByKey[f.key] = f);
 
 async function searchYT(query) {
+  // Caminho oficial: YouTube Data API v3 (funciona de qualquer IP, inclusive
+  // a nuvem do GitHub). Usa a chave em YOUTUBE_API_KEY (secret do repo).
+  const APIKEY = process.env.YOUTUBE_API_KEY;
+  if (APIKEY) {
+    try {
+      const u = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=6&regionCode=BR&relevanceLanguage=pt&q=" + encodeURIComponent(query) + "&key=" + APIKEY;
+      const r = await fetch(u);
+      if (r.ok) {
+        const d = await r.json();
+        return (d.items || []).filter(it => it.id && it.id.videoId)
+          .map(it => ({ id: it.id.videoId, title: it.snippet.title, ch: it.snippet.channelTitle }));
+      }
+      console.log("  (API HTTP", r.status, ")");
+    } catch (e) { console.log("  (erro API:", e.message, ")"); }
+  }
+  // Fallback: InnerTube (so se a chave nao estiver setada)
   try {
-    // InnerTube: API interna do YouTube (JSON limpo, funciona de servidor,
-    // ao contrario do scraping da pagina que o YouTube degrada para datacenters)
-    const KEY = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"; // chave publica do cliente web
+    const KEY = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8";
     const body = JSON.stringify({ context: { client: { clientName: "WEB", clientVersion: "2.20240101.00.00", hl: "pt", gl: "BR" } }, query });
     const r = await fetch("https://www.youtube.com/youtubei/v1/search?key=" + KEY, {
       method: "POST",

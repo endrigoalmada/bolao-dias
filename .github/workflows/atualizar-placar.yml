@@ -31,6 +31,8 @@ jobs:
       - name: Buscar resultados na ESPN
         run: node scripts/fetch-results.mjs
       - name: Buscar melhores momentos (CazéTV)
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: node scripts/fetch-highlights.mjs
       - name: Commitar se houve mudanca
         run: |
