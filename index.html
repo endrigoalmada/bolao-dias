@@ -199,7 +199,7 @@ function render(){
   document.getElementById("meta").textContent=`${DATA.participantes.length} participantes · ${Object.keys(R).length} jogos computados · clique num nome pra ver os palpites`;
 }
 // ---- painel: resultados oficiais (✓) + simulacao local (🔮, botoes − +) ----
-function setSc(id,dh,da){const b=sim[id]||oficial[id]||[0,0];sim[id]=[Math.max(0,b[0]+dh),Math.max(0,b[1]+da)];rebuildR();drawLive();render();}
+function setSc(id,dh,da){const b=sim[id]||oficial[id]||live[id]||[0,0];sim[id]=[Math.max(0,b[0]+dh),Math.max(0,b[1]+da)];rebuildR();drawLive();render();}
 function clrSc(id){delete sim[id];rebuildR();drawLive();render();}
 function limparSim(){sim={};rebuildR();drawLive();render();}
 function fmtKick(iso){
@@ -249,13 +249,14 @@ function drawAoVivo(){
 }
 function drawLive(){
   const sel=document.getElementById("gsel");
-  const fin=DATA.jogos.filter(j=>oficial[j.id]).slice(-5);
-  const next=DATA.jogos.filter(j=>!oficial[j.id]&&!live[j.id]).slice(0,Math.max(3,9-fin.length));
+  const liveG=DATA.jogos.filter(j=>live[j.id]);   // jogos rolando agora (simulaveis)
+  const fin=DATA.jogos.filter(j=>oficial[j.id]).slice(-4);
+  const next=DATA.jogos.filter(j=>!oficial[j.id]&&!live[j.id]).slice(0,Math.max(2,8-liveG.length-fin.length));
   const temSim=Object.keys(sim).length;
   sel.innerHTML=(temSim?`<div class="gm simclr" onclick="limparSim()">🔮 limpar<br>simulação</div>`:"")+
-   [...fin,...next].map(j=>{const r=R[j.id];const ofic=oficial[j.id];const isim=sim[j.id];const lv=live[j.id];
-    const badge=isim?' · 🔮 simulado':(lv?` · 🔴 ${liveMin[j.id]||'ao vivo'}`:(ofic?' · ✓ encerrado':''));
-    return `<div class="gm${lv?' aovivo':(ofic?' live-on':'')}${isim?' sim-on':''}"><div class="dt">${fmtData(j.d)}${badge}</div>
+   [...liveG,...fin,...next].map(j=>{const r=R[j.id];const ofic=oficial[j.id];const isim=sim[j.id];const lv=live[j.id];
+    const badge=isim?' · 🔮 simulando ao vivo':(lv?` · 🔴 ${liveMin[j.id]||'ao vivo'}`:(ofic?' · ✓ encerrado':''));
+    return `<div class="gm${isim?' sim-on':(lv?' aovivo':(ofic?' live-on':''))}"><div class="dt">${fmtData(j.d)}${badge}</div>
      <div class="ln"><span class="nm">${j.h}</span><span class="stp"><button onclick="setSc('${j.id}',-1,0)">−</button><span class="sc">${r?r[0]:0}</span><button onclick="setSc('${j.id}',1,0)">+</button></span></div>
      <div class="ln" style="margin-top:4px"><span class="nm">${j.a}</span><span class="stp"><button onclick="setSc('${j.id}',0,-1)">−</button><span class="sc">${r?r[1]:0}</span><button onclick="setSc('${j.id}',0,1)">+</button></span></div>
      ${isim?`<div class="clr" onclick="clrSc('${j.id}')">✕ voltar ao oficial</div>`:''}
