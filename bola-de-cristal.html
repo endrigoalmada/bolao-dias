@@ -9,7 +9,17 @@ h1{font-size:30px;font-weight:900;letter-spacing:-.5px}
 h1 span{color:var(--ac)}
 .sub{color:var(--mu);margin:6px 0 4px;max-width:90ch}
 .sub b{color:var(--go)}
-table{width:100%;border-collapse:collapse;margin-top:16px}
+.tbox{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:16px}
+table{width:100%;border-collapse:collapse;min-width:660px}
+.swipe{display:none;color:var(--mu);font-size:12px;margin:10px 0 2px}
+@media(max-width:640px){
+ body{padding:18px 14px}
+ h1{font-size:22px}
+ .swipe{display:block}
+ th,td{padding:6px 7px}
+ .es{width:120px}.es b{font-size:15px}
+ .wv{width:110px}.wv .wbar{max-width:50px}
+}
 th{text-align:left;color:var(--mu);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1px solid var(--ln)}
 th.c,td.c{text-align:center}
 td{padding:7px 10px;border-bottom:1px solid #ffffff08}
@@ -35,6 +45,8 @@ td{padding:7px 10px;border-bottom:1px solid #ffffff08}
 grupos restantes + mata-mata + <b>Bola de Cristal</b> (campeão 100 / vice 60 / 3º 30 / 4º 30).</p>
 <p class="sub">A Bola de Cristal só é decidida no mata-mata e <b>reordena tudo</b>: compare a coluna
 <b>Travado</b> (garantido na fase de grupos) com o <b>Esperado</b> final. Δ é o salto de posição.</p>
+<p class="swipe">↔ deslize a tabela pro lado pra ver Vitória % e Δ posição.</p>
+<div class="tbox">
 <table>
 <thead><tr><th class="c">#</th><th>Participante</th><th style="text-align:right">Travado</th>
 <th>Esperado</th><th style="text-align:right">Bola Crist.</th><th>Vitória %</th><th class="c">Δ pos</th></tr></thead>
@@ -495,5 +507,6 @@ grupos restantes + mata-mata + <b>Bola de Cristal</b> (campeão 100 / vice 60 / 
         <td class="wv"><span class="wbar" style="--w:1%"></span>0.1%</td>
         <td class="dp eq">=</td>
       </tr></tbody></table>
+</div>
 <p class="foot">Travado = pontos já garantidos · Esperado = média do total final · Bola Crist. = pontos médios vindos do pódio · Vitória % = cenários em que termina em 1º · Δ pos = salto do ranking travado para o esperado.</p>
 </body></html>
