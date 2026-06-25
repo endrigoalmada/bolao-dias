@@ -1,512 +1,509 @@
 <!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bolão Copa 2026 — Leaderboard Preditivo</title><style>
+<title>Ranking Bola de Cristal — Bolão do Dias</title><style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0a0e14;--pa:#111824;--ln:#1e2a3a;--tx:#e8edf4;--mu:#7d8da3;
 --ac:#3ddc97;--go:#f5c451;--rd:#ef5a6f;--bl:#4a9fff}
-body{background:var(--bg);color:var(--tx);font:14px/1.45 -apple-system,Segoe UI,Roboto,sans-serif;padding:28px 4vw}
-h1{font-size:30px;font-weight:900;letter-spacing:-.5px}
-h1 span{color:var(--ac)}
-.sub{color:var(--mu);margin:6px 0 4px;max-width:90ch}
-.sub b{color:var(--go)}
-.tbox{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:16px}
-table{width:100%;border-collapse:collapse;min-width:660px}
+body{background:var(--bg);color:var(--tx);font:14px/1.45 -apple-system,Segoe UI,Roboto,sans-serif;padding:26px 4vw}
+h1{font-size:27px;font-weight:900;letter-spacing:-.5px}h1 span{color:var(--go)}
+.sub{color:var(--mu);margin:7px 0;max-width:92ch}
+.sub b{color:var(--tx)}
+.state{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
+.chip{background:var(--pa);border:1px solid var(--ln);border-radius:10px;padding:8px 13px;font-size:13px}
+.chip b{color:var(--go)}
+.chip.bc b{color:var(--ac)}
 .swipe{display:none;color:var(--mu);font-size:12px;margin:10px 0 2px}
-@media(max-width:640px){
- body{padding:18px 14px}
- h1{font-size:22px}
- .swipe{display:block}
- th,td{padding:6px 7px}
- .es{width:120px}.es b{font-size:15px}
- .wv{width:110px}.wv .wbar{max-width:50px}
-}
-th{text-align:left;color:var(--mu);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1px solid var(--ln)}
-th.c,td.c{text-align:center}
-td{padding:7px 10px;border-bottom:1px solid #ffffff08}
-.pos{width:36px;text-align:center;color:var(--mu);font-weight:700}
+.tbox{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:14px}
+table{width:100%;border-collapse:collapse;min-width:560px}
+th{text-align:center;color:var(--mu);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:9px 8px;border-bottom:1px solid var(--ln)}
+th.l{text-align:left}
+td{padding:9px 8px;border-bottom:1px solid #ffffff08;text-align:center}
+.pos{width:34px;color:var(--mu);font-weight:700}
 .pos.g{color:#f5c451}.pos.s{color:#cdd6e3}.pos.b{color:#d6864a}
-.nm{font-weight:600}
+.nm{text-align:left;font-weight:700}
+.pod{font-weight:400;color:var(--mu);font-size:11.5px;margin-top:2px}
+.n{font-variant-numeric:tabular-nums}
+.bc .pend{color:var(--mu);font-style:italic;font-size:12px}
+.tot{font-weight:900;font-size:16px;color:var(--ac)}
 .r.me{background:linear-gradient(90deg,#3ddc9722,transparent)}
 .r.me .nm{color:var(--ac)}
 .r.me .nm::after{content:" ← você";color:var(--ac);font-size:11px;font-weight:700}
-.tr{color:var(--mu);width:70px;text-align:right}
-.es{width:160px;position:relative}
-.es .bar{position:absolute;left:0;top:50%;transform:translateY(-50%);height:22px;width:var(--w);background:#3ddc9725;border-radius:4px;z-index:0}
-.es b{position:relative;z-index:1;font-size:16px;font-weight:800;padding-left:6px}
-.bc{width:70px;text-align:right;color:var(--go)}
-.wv{width:150px;position:relative;color:var(--tx)}
-.wv .wbar{display:inline-block;height:8px;width:var(--w);max-width:90px;background:var(--bl);border-radius:4px;margin-right:8px;vertical-align:middle}
-.dp{width:54px;text-align:center;font-weight:700;font-size:12px}
-.dp.up{color:var(--ac)}.dp.down{color:var(--rd)}.dp.eq{color:var(--mu)}
-.foot{color:var(--mu);font-size:12px;margin-top:14px}
+.foot{color:var(--mu);font-size:12px;margin-top:14px;max-width:92ch}
+@media(max-width:640px){body{padding:18px 14px}h1{font-size:22px}.swipe{display:block}th,td{padding:7px 6px}}
 </style></head><body>
-<h1>Leaderboard <span>preditivo</span> · Bolão Copa 2026</h1>
-<p class="sub">Monte Carlo de <b>20000</b> torneios completos a partir do estado real (fonte ESPN):
-grupos restantes + mata-mata + <b>Bola de Cristal</b> (campeão 100 / vice 60 / 3º 30 / 4º 30).</p>
-<p class="sub">A Bola de Cristal só é decidida no mata-mata e <b>reordena tudo</b>: compare a coluna
-<b>Travado</b> (garantido na fase de grupos) com o <b>Esperado</b> final. Δ é o salto de posição.</p>
-<p class="swipe">↔ deslize a tabela pro lado pra ver Vitória % e Δ posição.</p>
+<h1>🔮 Ranking <span>Bola de Cristal</span></h1>
+<p class="sub">Conta <b>só o que já é fato</b>: classificados (posição certa 10 / classificado errado 5),
+acerto do 3º colocado e a <b>Bola de Cristal</b> (campeão 100 / vice 60 / 3º 30 / 4º 30).
+<b>Não</b> conta os placares dos jogos (isso é o placar ao vivo). Sobe conforme os jogos acontecem.</p>
+<div class="state">
+  <span class="chip">Grupos encerrados: <b>3/12</b></span>
+  <span class="chip">3º que avançam: <b>a definir</b></span>
+  <span class="chip bc">Bola de Cristal: <b>a definir (decide no mata-mata)</b></span>
+</div>
+<p class="swipe">↔ deslize a tabela pro lado pra ver tudo.</p>
 <div class="tbox">
 <table>
-<thead><tr><th class="c">#</th><th>Participante</th><th style="text-align:right">Travado</th>
-<th>Esperado</th><th style="text-align:right">Bola Crist.</th><th>Vitória %</th><th class="c">Δ pos</th></tr></thead>
+<thead><tr><th>#</th><th class="l">Participante · pódio palpitado</th>
+<th>Classif.</th><th>3º</th><th>Bola Cristal</th><th>Total</th></tr></thead>
 <tbody>
       <tr class="r">
-        <td class="pos g">1</td><td class="nm">Acayaba</td>
-        <td class="tr">261</td>
-        <td class="es"><span class="bar" style="--w:100%"></span><b>568</b></td>
-        <td class="bc">+33</td>
-        <td class="wv"><span class="wbar" style="--w:100%"></span>10.4%</td>
-        <td class="dp up">▲1</td>
+        <td class="pos g">1</td>
+        <td class="nm">Cleber<div class="pod">🏆 🇫🇷 França · 🥈 🇪🇸 Espanha · 🥉 🇦🇷 Argentina · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">30</td>
+        <td class="n">20</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">50</td>
       </tr>
       <tr class="r">
-        <td class="pos s">2</td><td class="nm">Márcio</td>
-        <td class="tr">247</td>
-        <td class="es"><span class="bar" style="--w:99%"></span><b>562</b></td>
-        <td class="bc">+17</td>
-        <td class="wv"><span class="wbar" style="--w:93%"></span>9.7%</td>
-        <td class="dp up">▲4</td>
+        <td class="pos s">2</td>
+        <td class="nm">Daniel Beccari<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇫🇷 França · 🥉 🇪🇸 Espanha · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">30</td>
+        <td class="n">20</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">50</td>
       </tr>
       <tr class="r">
-        <td class="pos b">3</td><td class="nm">Paizao</td>
-        <td class="tr">256</td>
-        <td class="es"><span class="bar" style="--w:99%"></span><b>561</b></td>
-        <td class="bc">+21</td>
-        <td class="wv"><span class="wbar" style="--w:63%"></span>6.5%</td>
-        <td class="dp up">▲1</td>
+        <td class="pos b">3</td>
+        <td class="nm">Paizao<div class="pod">🏆 🇫🇷 França · 🥈 🇵🇹 Portugal · 🥉 🇪🇸 Espanha · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">30</td>
+        <td class="n">20</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">50</td>
       </tr>
       <tr class="r">
-        <td class="pos ">4</td><td class="nm">Karol</td>
-        <td class="tr">261</td>
-        <td class="es"><span class="bar" style="--w:99%"></span><b>559</b></td>
-        <td class="bc">+15</td>
-        <td class="wv"><span class="wbar" style="--w:100%"></span>10.4%</td>
-        <td class="dp down">▼3</td>
+        <td class="pos ">4</td>
+        <td class="nm">Quexada<div class="pod">🏆 🇫🇷 França · 🥈 🇦🇷 Argentina · 🥉 🇧🇷 Brasil · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">30</td>
+        <td class="n">20</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">50</td>
       </tr>
       <tr class="r">
-        <td class="pos ">5</td><td class="nm">Felipe Yukio</td>
-        <td class="tr">226</td>
-        <td class="es"><span class="bar" style="--w:98%"></span><b>556</b></td>
-        <td class="bc">+30</td>
-        <td class="wv"><span class="wbar" style="--w:47%"></span>4.9%</td>
-        <td class="dp up">▲20</td>
+        <td class="pos ">5</td>
+        <td class="nm">Kauã<div class="pod">🏆 🇫🇷 França · 🥈 🇵🇹 Portugal · 🥉 🇪🇸 Espanha · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">25</td>
+        <td class="n">20</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">45</td>
       </tr>
       <tr class="r">
-        <td class="pos ">6</td><td class="nm">Ronaldo Rosan</td>
-        <td class="tr">250</td>
-        <td class="es"><span class="bar" style="--w:98%"></span><b>555</b></td>
-        <td class="bc">+19</td>
-        <td class="wv"><span class="wbar" style="--w:64%"></span>6.7%</td>
-        <td class="dp down">▼1</td>
+        <td class="pos ">6</td>
+        <td class="nm">Gil<div class="pod">🏆 🇫🇷 França · 🥈 🇵🇹 Portugal · 🥉 🇧🇷 Brasil · 4º 🇺🇾 Uruguai</div></td>
+        <td class="n">30</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">40</td>
       </tr>
       <tr class="r">
-        <td class="pos ">7</td><td class="nm">Ni</td>
-        <td class="tr">259</td>
-        <td class="es"><span class="bar" style="--w:98%"></span><b>555</b></td>
-        <td class="bc">+20</td>
-        <td class="wv"><span class="wbar" style="--w:46%"></span>4.8%</td>
-        <td class="dp down">▼4</td>
+        <td class="pos ">7</td>
+        <td class="nm">Gustriver<div class="pod">🏆 🇵🇹 Portugal · 🥈 🇫🇷 França · 🥉 🇪🇸 Espanha · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">30</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">40</td>
       </tr>
       <tr class="r">
-        <td class="pos ">8</td><td class="nm">Carol</td>
-        <td class="tr">246</td>
-        <td class="es"><span class="bar" style="--w:98%"></span><b>554</b></td>
-        <td class="bc">+18</td>
-        <td class="wv"><span class="wbar" style="--w:73%"></span>7.6%</td>
-        <td class="dp down">▼1</td>
+        <td class="pos ">8</td>
+        <td class="nm">Jose Augusto<div class="pod">🏆 🇪🇸 Espanha · 🥈 🇦🇷 Argentina · 🥉 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra · 4º 🇫🇷 França</div></td>
+        <td class="n">30</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">40</td>
       </tr>
       <tr class="r">
-        <td class="pos ">9</td><td class="nm">Fábio Diniz</td>
-        <td class="tr">224</td>
-        <td class="es"><span class="bar" style="--w:97%"></span><b>550</b></td>
-        <td class="bc">+27</td>
-        <td class="wv"><span class="wbar" style="--w:44%"></span>4.6%</td>
-        <td class="dp up">▲19</td>
+        <td class="pos ">9</td>
+        <td class="nm">Kike<div class="pod">🏆 🇵🇹 Portugal · 🥈 🇫🇷 França · 🥉 🇪🇸 Espanha · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">30</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">40</td>
       </tr>
       <tr class="r">
-        <td class="pos ">10</td><td class="nm">Dadá</td>
-        <td class="tr">246</td>
-        <td class="es"><span class="bar" style="--w:97%"></span><b>548</b></td>
-        <td class="bc">+18</td>
-        <td class="wv"><span class="wbar" style="--w:67%"></span>7.0%</td>
-        <td class="dp down">▼2</td>
+        <td class="pos ">10</td>
+        <td class="nm">Maria<div class="pod">🏆 🇩🇪 Alemanha · 🥈 🇦🇷 Argentina · 🥉 🇪🇸 Espanha · 4º 🇺🇸 EUA</div></td>
+        <td class="n">30</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">40</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">11</td>
+        <td class="nm">Márcio<div class="pod">🏆 🇵🇹 Portugal · 🥈 🇪🇸 Espanha · 🥉 🇦🇷 Argentina · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">30</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">40</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">12</td>
+        <td class="nm">Ronaldo Rosan<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇪🇸 Espanha · 🥉 🇫🇷 França · 4º 🇦🇷 Argentina</div></td>
+        <td class="n">30</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">40</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">13</td>
+        <td class="nm">Siri<div class="pod">🏆 🇫🇷 França · 🥈 🇪🇸 Espanha · 🥉 🇦🇷 Argentina · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">30</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">40</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">14</td>
+        <td class="nm">Tim Sivieri<div class="pod">🏆 🇫🇷 França · 🥈 🇦🇷 Argentina · 🥉 🇧🇷 Brasil · 4º 🇪🇸 Espanha</div></td>
+        <td class="n">30</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">40</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">15</td>
+        <td class="nm">Xará<div class="pod">🏆 🇪🇸 Espanha · 🥈 🇧🇷 Brasil · 🥉 🇫🇷 França · 4º 🇵🇹 Portugal</div></td>
+        <td class="n">30</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">40</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">16</td>
+        <td class="nm">Evandro<div class="pod">🏆 🇪🇸 Espanha · 🥈 🇵🇹 Portugal · 🥉 🇫🇷 França · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">20</td>
+        <td class="n">20</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">40</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">17</td>
+        <td class="nm">Newton<div class="pod">🏆 🇫🇷 França · 🥈 🇪🇸 Espanha · 🥉 🇧🇷 Brasil · 4º 🇵🇹 Portugal</div></td>
+        <td class="n">20</td>
+        <td class="n">20</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">40</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">18</td>
+        <td class="nm">Ni<div class="pod">🏆 🇫🇷 França · 🥈 🇵🇹 Portugal · 🥉 🇪🇸 Espanha · 4º 🇦🇷 Argentina</div></td>
+        <td class="n">25</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">35</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">19</td>
+        <td class="nm">Oli<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇫🇷 França · 🥉 🇵🇹 Portugal · 4º 🇦🇷 Argentina</div></td>
+        <td class="n">25</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">35</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">20</td>
+        <td class="nm">Tim Rodolfo<div class="pod">🏆 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra · 🥈 🇵🇹 Portugal · 🥉 🇦🇷 Argentina · 4º 🇵🇾 Paraguai</div></td>
+        <td class="n">25</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">35</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">21</td>
+        <td class="nm">Acayaba<div class="pod">🏆 🇪🇸 Espanha · 🥈 🇦🇷 Argentina · 🥉 🇫🇷 França · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">30</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">22</td>
+        <td class="nm">Carol<div class="pod">🏆 🇵🇹 Portugal · 🥈 🇪🇸 Espanha · 🥉 🇫🇷 França · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">30</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">23</td>
+        <td class="nm">Cassio<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇫🇷 França · 🥉 🇪🇸 Espanha · 4º 🇦🇷 Argentina</div></td>
+        <td class="n">30</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">24</td>
+        <td class="nm">Celmar<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇦🇷 Argentina · 🥉 🇧🇪 Bélgica · 4º 🇩🇪 Alemanha</div></td>
+        <td class="n">30</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">25</td>
+        <td class="nm">Ernani<div class="pod">🏆 🇫🇷 França · 🥈 🇪🇸 Espanha · 🥉 🇧🇷 Brasil · 4º 🇦🇷 Argentina</div></td>
+        <td class="n">30</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">26</td>
+        <td class="nm">Felipe Yukio<div class="pod">🏆 🇪🇸 Espanha · 🥈 🇫🇷 França · 🥉 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra · 4º 🇵🇹 Portugal</div></td>
+        <td class="n">30</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">27</td>
+        <td class="nm">Fábio Diniz<div class="pod">🏆 🇫🇷 França · 🥈 🇦🇷 Argentina · 🥉 🇪🇸 Espanha · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">30</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">28</td>
+        <td class="nm">João Fernando<div class="pod">🏆 🇵🇹 Portugal · 🥈 🇪🇸 Espanha · 🥉 🇫🇷 França · 4º 🇦🇷 Argentina</div></td>
+        <td class="n">30</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">29</td>
+        <td class="nm">Jupita<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇪🇸 Espanha · 🥉 🇫🇷 França · 4º 🇵🇹 Portugal</div></td>
+        <td class="n">30</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">30</td>
+        <td class="nm">Luciano<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇪🇸 Espanha · 🥉 🇵🇹 Portugal · 4º 🇫🇷 França</div></td>
+        <td class="n">30</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">31</td>
+        <td class="nm">Pudim<div class="pod">🏆 🇫🇷 França · 🥈 🇵🇹 Portugal · 🥉 🇪🇸 Espanha · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">30</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">32</td>
+        <td class="nm">Yukio<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇪🇸 Espanha · 🥉 🇫🇷 França · 4º 🇦🇷 Argentina</div></td>
+        <td class="n">30</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">33</td>
+        <td class="nm">Chefia<div class="pod">🏆 🇵🇹 Portugal · 🥈 🇪🇸 Espanha · 🥉 🇧🇷 Brasil · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">20</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">34</td>
+        <td class="nm">Dias<div class="pod">🏆 🇪🇸 Espanha · 🥈 🇵🇹 Portugal · 🥉 🇫🇷 França · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">20</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">35</td>
+        <td class="nm">Diniz<div class="pod">🏆 🇵🇹 Portugal · 🥈 🇳🇱 Holanda · 🥉 🇦🇷 Argentina · 4º 🇫🇷 França</div></td>
+        <td class="n">20</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">36</td>
+        <td class="nm">Elinton<div class="pod">🏆 🇫🇷 França · 🥈 🇪🇸 Espanha · 🥉 🇦🇷 Argentina · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">20</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">37</td>
+        <td class="nm">Gustavinho<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇫🇷 França · 🥉 🇪🇸 Espanha · 4º 🇵🇹 Portugal</div></td>
+        <td class="n">20</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">38</td>
+        <td class="nm">João Peludo<div class="pod">🏆 🇫🇷 França · 🥈 🇦🇷 Argentina · 🥉 🇪🇸 Espanha · 4º 🇵🇹 Portugal</div></td>
+        <td class="n">20</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">39</td>
+        <td class="nm">Karol<div class="pod">🏆 🇵🇹 Portugal · 🥈 🇫🇷 França · 🥉 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">20</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">40</td>
+        <td class="nm">Marcelão<div class="pod">🏆 🇪🇸 Espanha · 🥈 🇦🇷 Argentina · 🥉 🇫🇷 França · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">20</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">41</td>
+        <td class="nm">Rafa Banhos<div class="pod">🏆 🇫🇷 França · 🥈 🇵🇹 Portugal · 🥉 🇧🇷 Brasil · 4º 🇪🇸 Espanha</div></td>
+        <td class="n">20</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">30</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">42</td>
+        <td class="nm">Celso<div class="pod">🏆 🇫🇷 França · 🥈 🇪🇸 Espanha · 🥉 🇵🇹 Portugal · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">25</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">25</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">43</td>
+        <td class="nm">Du<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇵🇹 Portugal · 🥉 🇦🇷 Argentina · 4º 🇪🇸 Espanha</div></td>
+        <td class="n">25</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">25</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">44</td>
+        <td class="nm">Rafael Gaúcho<div class="pod">🏆 🇪🇸 Espanha · 🥈 🇧🇷 Brasil · 🥉 🇫🇷 França · 4º 🇦🇷 Argentina</div></td>
+        <td class="n">25</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">25</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">45</td>
+        <td class="nm">Ruan<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇫🇷 França · 🥉 🇵🇹 Portugal · 4º 🇪🇸 Espanha</div></td>
+        <td class="n">25</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">25</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">46</td>
+        <td class="nm">Gui Anhê<div class="pod">🏆 🇦🇷 Argentina · 🥈 🇪🇸 Espanha · 🥉 🇫🇷 França · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">15</td>
+        <td class="n">10</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">25</td>
+      </tr>
+      <tr class="r">
+        <td class="pos ">47</td>
+        <td class="nm">Dadá<div class="pod">🏆 🇫🇷 França · 🥈 🇲🇦 Marrocos · 🥉 🇪🇸 Espanha · 4º 🇦🇷 Argentina</div></td>
+        <td class="n">20</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">20</td>
       </tr>
       <tr class="r me">
-        <td class="pos ">11</td><td class="nm">Endrigo</td>
-        <td class="tr">231</td>
-        <td class="es"><span class="bar" style="--w:95%"></span><b>538</b></td>
-        <td class="bc">+34</td>
-        <td class="wv"><span class="wbar" style="--w:34%"></span>3.6%</td>
-        <td class="dp up">▲8</td>
+        <td class="pos ">48</td>
+        <td class="nm">Endrigo<div class="pod">🏆 🇪🇸 Espanha · 🥈 🇦🇷 Argentina · 🥉 🇫🇷 França · 4º 🇲🇽 México</div></td>
+        <td class="n">20</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">20</td>
       </tr>
       <tr class="r">
-        <td class="pos ">12</td><td class="nm">Pudim</td>
-        <td class="tr">238</td>
-        <td class="es"><span class="bar" style="--w:94%"></span><b>534</b></td>
-        <td class="bc">+21</td>
-        <td class="wv"><span class="wbar" style="--w:4%"></span>0.4%</td>
-        <td class="dp up">▲2</td>
+        <td class="pos ">49</td>
+        <td class="nm">Fernandao<div class="pod">🏆 🇫🇷 França · 🥈 🇪🇸 Espanha · 🥉 🇦🇷 Argentina · 4º 🇩🇪 Alemanha</div></td>
+        <td class="n">20</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">20</td>
       </tr>
       <tr class="r">
-        <td class="pos ">13</td><td class="nm">Siri</td>
-        <td class="tr">226</td>
-        <td class="es"><span class="bar" style="--w:94%"></span><b>534</b></td>
-        <td class="bc">+27</td>
-        <td class="wv"><span class="wbar" style="--w:14%"></span>1.4%</td>
-        <td class="dp up">▲11</td>
+        <td class="pos ">50</td>
+        <td class="nm">Flavio<div class="pod">🏆 🇫🇷 França · 🥈 🇦🇷 Argentina · 🥉 🇩🇪 Alemanha · 4º 🇭🇷 Croácia</div></td>
+        <td class="n">20</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">20</td>
       </tr>
       <tr class="r">
-        <td class="pos ">14</td><td class="nm">Evandro</td>
-        <td class="tr">233</td>
-        <td class="es"><span class="bar" style="--w:94%"></span><b>532</b></td>
-        <td class="bc">+28</td>
-        <td class="wv"><span class="wbar" style="--w:13%"></span>1.3%</td>
-        <td class="dp up">▲3</td>
+        <td class="pos ">51</td>
+        <td class="nm">Frazatti<div class="pod">🏆 🇫🇷 França · 🥈 🇪🇸 Espanha · 🥉 🇦🇷 Argentina · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">20</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">20</td>
       </tr>
       <tr class="r">
-        <td class="pos ">15</td><td class="nm">Gustavinho</td>
-        <td class="tr">232</td>
-        <td class="es"><span class="bar" style="--w:94%"></span><b>532</b></td>
-        <td class="bc">+16</td>
-        <td class="wv"><span class="wbar" style="--w:19%"></span>1.9%</td>
-        <td class="dp up">▲3</td>
+        <td class="pos ">52</td>
+        <td class="nm">Kuba<div class="pod">🏆 🇵🇹 Portugal · 🥈 🇪🇸 Espanha · 🥉 🇫🇷 França · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">20</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">20</td>
       </tr>
       <tr class="r">
-        <td class="pos ">16</td><td class="nm">Jose Augusto</td>
-        <td class="tr">220</td>
-        <td class="es"><span class="bar" style="--w:94%"></span><b>531</b></td>
-        <td class="bc">+32</td>
-        <td class="wv"><span class="wbar" style="--w:22%"></span>2.3%</td>
-        <td class="dp up">▲15</td>
+        <td class="pos ">53</td>
+        <td class="nm">Maurício<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇪🇸 Espanha · 🥉 🇦🇷 Argentina · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">20</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">20</td>
       </tr>
       <tr class="r">
-        <td class="pos ">17</td><td class="nm">João Fernando</td>
-        <td class="tr">231</td>
-        <td class="es"><span class="bar" style="--w:94%"></span><b>531</b></td>
-        <td class="bc">+17</td>
-        <td class="wv"><span class="wbar" style="--w:3%"></span>0.3%</td>
-        <td class="dp up">▲3</td>
+        <td class="pos ">54</td>
+        <td class="nm">Mosquito<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇫🇷 França · 🥉 🇪🇸 Espanha · 4º 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div></td>
+        <td class="n">20</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">20</td>
       </tr>
       <tr class="r">
-        <td class="pos ">18</td><td class="nm">Marcelão</td>
-        <td class="tr">206</td>
-        <td class="es"><span class="bar" style="--w:93%"></span><b>529</b></td>
-        <td class="bc">+33</td>
-        <td class="wv"><span class="wbar" style="--w:16%"></span>1.7%</td>
-        <td class="dp up">▲24</td>
+        <td class="pos ">55</td>
+        <td class="nm">Tupã<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇪🇸 Espanha · 🥉 🇫🇷 França · 4º 🇦🇷 Argentina</div></td>
+        <td class="n">20</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">20</td>
       </tr>
       <tr class="r">
-        <td class="pos ">19</td><td class="nm">Ernani</td>
-        <td class="tr">225</td>
-        <td class="es"><span class="bar" style="--w:93%"></span><b>525</b></td>
-        <td class="bc">+25</td>
-        <td class="wv"><span class="wbar" style="--w:5%"></span>0.5%</td>
-        <td class="dp up">▲7</td>
+        <td class="pos ">56</td>
+        <td class="nm">Will<div class="pod">🏆 🇧🇷 Brasil · 🥈 🇫🇷 França · 🥉 🇵🇹 Portugal · 4º 🇪🇸 Espanha</div></td>
+        <td class="n">20</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">20</td>
       </tr>
       <tr class="r">
-        <td class="pos ">20</td><td class="nm">Gil</td>
-        <td class="tr">224</td>
-        <td class="es"><span class="bar" style="--w:93%"></span><b>525</b></td>
-        <td class="bc">+19</td>
-        <td class="wv"><span class="wbar" style="--w:3%"></span>0.3%</td>
-        <td class="dp up">▲9</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">21</td><td class="nm">Yukio</td>
-        <td class="tr">235</td>
-        <td class="es"><span class="bar" style="--w:93%"></span><b>525</b></td>
-        <td class="bc">+19</td>
-        <td class="wv"><span class="wbar" style="--w:4%"></span>0.4%</td>
-        <td class="dp down">▼5</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">22</td><td class="nm">João Peludo</td>
-        <td class="tr">217</td>
-        <td class="es"><span class="bar" style="--w:92%"></span><b>522</b></td>
-        <td class="bc">+26</td>
-        <td class="wv"><span class="wbar" style="--w:5%"></span>0.5%</td>
-        <td class="dp up">▲11</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">23</td><td class="nm">Cleber</td>
-        <td class="tr">239</td>
-        <td class="es"><span class="bar" style="--w:92%"></span><b>521</b></td>
-        <td class="bc">+27</td>
-        <td class="wv"><span class="wbar" style="--w:2%"></span>0.2%</td>
-        <td class="dp down">▼11</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">24</td><td class="nm">Cassio</td>
-        <td class="tr">227</td>
-        <td class="es"><span class="bar" style="--w:92%"></span><b>519</b></td>
-        <td class="bc">+16</td>
-        <td class="wv"><span class="wbar" style="--w:11%"></span>1.1%</td>
-        <td class="dp down">▼1</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">25</td><td class="nm">Oli</td>
-        <td class="tr">243</td>
-        <td class="es"><span class="bar" style="--w:91%"></span><b>519</b></td>
-        <td class="bc">+14</td>
-        <td class="wv"><span class="wbar" style="--w:9%"></span>0.9%</td>
-        <td class="dp down">▼16</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">26</td><td class="nm">Kike</td>
-        <td class="tr">240</td>
-        <td class="es"><span class="bar" style="--w:91%"></span><b>518</b></td>
-        <td class="bc">+15</td>
-        <td class="wv"><span class="wbar" style="--w:3%"></span>0.3%</td>
-        <td class="dp down">▼16</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">27</td><td class="nm">Quexada</td>
-        <td class="tr">231</td>
-        <td class="es"><span class="bar" style="--w:91%"></span><b>518</b></td>
-        <td class="bc">+26</td>
-        <td class="wv"><span class="wbar" style="--w:9%"></span>1.0%</td>
-        <td class="dp down">▼6</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">28</td><td class="nm">Chefia</td>
-        <td class="tr">237</td>
-        <td class="es"><span class="bar" style="--w:91%"></span><b>517</b></td>
-        <td class="bc">+15</td>
-        <td class="wv"><span class="wbar" style="--w:5%"></span>0.5%</td>
-        <td class="dp down">▼13</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">29</td><td class="nm">Kauã</td>
-        <td class="tr">225</td>
-        <td class="es"><span class="bar" style="--w:91%"></span><b>516</b></td>
-        <td class="bc">+21</td>
-        <td class="wv"><span class="wbar" style="--w:0%"></span>0.0%</td>
-        <td class="dp down">▼2</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">30</td><td class="nm">Rafa Banhos</td>
-        <td class="tr">220</td>
-        <td class="es"><span class="bar" style="--w:90%"></span><b>511</b></td>
-        <td class="bc">+20</td>
-        <td class="wv"><span class="wbar" style="--w:2%"></span>0.2%</td>
-        <td class="dp up">▲2</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">31</td><td class="nm">Luciano</td>
-        <td class="tr">227</td>
-        <td class="es"><span class="bar" style="--w:89%"></span><b>508</b></td>
-        <td class="bc">+17</td>
-        <td class="wv"><span class="wbar" style="--w:4%"></span>0.4%</td>
-        <td class="dp down">▼9</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">32</td><td class="nm">Rafael Gaúcho</td>
-        <td class="tr">215</td>
-        <td class="es"><span class="bar" style="--w:89%"></span><b>506</b></td>
-        <td class="bc">+29</td>
-        <td class="wv"><span class="wbar" style="--w:13%"></span>1.4%</td>
-        <td class="dp up">▲2</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">33</td><td class="nm">Newton</td>
-        <td class="tr">212</td>
-        <td class="es"><span class="bar" style="--w:89%"></span><b>506</b></td>
-        <td class="bc">+25</td>
-        <td class="wv"><span class="wbar" style="--w:2%"></span>0.2%</td>
-        <td class="dp up">▲4</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">34</td><td class="nm">Maurício</td>
-        <td class="tr">205</td>
-        <td class="es"><span class="bar" style="--w:89%"></span><b>504</b></td>
-        <td class="bc">+18</td>
-        <td class="wv"><span class="wbar" style="--w:3%"></span>0.3%</td>
-        <td class="dp up">▲9</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">35</td><td class="nm">Tupã</td>
-        <td class="tr">211</td>
-        <td class="es"><span class="bar" style="--w:88%"></span><b>500</b></td>
-        <td class="bc">+19</td>
-        <td class="wv"><span class="wbar" style="--w:1%"></span>0.1%</td>
-        <td class="dp up">▲3</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">36</td><td class="nm">Fernandao</td>
-        <td class="tr">201</td>
-        <td class="es"><span class="bar" style="--w:88%"></span><b>499</b></td>
-        <td class="bc">+27</td>
-        <td class="wv"><span class="wbar" style="--w:1%"></span>0.1%</td>
-        <td class="dp up">▲11</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">37</td><td class="nm">Celso</td>
-        <td class="tr">210</td>
-        <td class="es"><span class="bar" style="--w:88%"></span><b>499</b></td>
-        <td class="bc">+25</td>
-        <td class="wv"><span class="wbar" style="--w:1%"></span>0.1%</td>
-        <td class="dp up">▲3</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">38</td><td class="nm">Daniel Beccari</td>
-        <td class="tr">239</td>
-        <td class="es"><span class="bar" style="--w:88%"></span><b>499</b></td>
-        <td class="bc">+17</td>
-        <td class="wv"><span class="wbar" style="--w:2%"></span>0.2%</td>
-        <td class="dp down">▼25</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">39</td><td class="nm">Marcelinho</td>
-        <td class="tr">193</td>
-        <td class="es"><span class="bar" style="--w:88%"></span><b>497</b></td>
-        <td class="bc">+28</td>
-        <td class="wv"><span class="wbar" style="--w:2%"></span>0.2%</td>
-        <td class="dp up">▲11</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">40</td><td class="nm">Kuba</td>
-        <td class="tr">215</td>
-        <td class="es"><span class="bar" style="--w:87%"></span><b>496</b></td>
-        <td class="bc">+18</td>
-        <td class="wv"><span class="wbar" style="--w:0%"></span>0.0%</td>
-        <td class="dp down">▼5</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">41</td><td class="nm">Gustriver</td>
-        <td class="tr">240</td>
-        <td class="es"><span class="bar" style="--w:87%"></span><b>494</b></td>
-        <td class="bc">+16</td>
-        <td class="wv"><span class="wbar" style="--w:5%"></span>0.5%</td>
-        <td class="dp down">▼30</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">42</td><td class="nm">Mosquito</td>
-        <td class="tr">205</td>
-        <td class="es"><span class="bar" style="--w:87%"></span><b>493</b></td>
-        <td class="bc">+17</td>
-        <td class="wv"><span class="wbar" style="--w:2%"></span>0.2%</td>
-        <td class="dp up">▲2</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">43</td><td class="nm">Ruan</td>
-        <td class="tr">221</td>
-        <td class="es"><span class="bar" style="--w:86%"></span><b>491</b></td>
-        <td class="bc">+15</td>
-        <td class="wv"><span class="wbar" style="--w:1%"></span>0.1%</td>
-        <td class="dp down">▼13</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">44</td><td class="nm">Will</td>
-        <td class="tr">209</td>
-        <td class="es"><span class="bar" style="--w:86%"></span><b>486</b></td>
-        <td class="bc">+15</td>
-        <td class="wv"><span class="wbar" style="--w:0%"></span>0.0%</td>
-        <td class="dp down">▼3</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">45</td><td class="nm">Xará</td>
-        <td class="tr">196</td>
-        <td class="es"><span class="bar" style="--w:85%"></span><b>481</b></td>
-        <td class="bc">+29</td>
-        <td class="wv"><span class="wbar" style="--w:1%"></span>0.1%</td>
-        <td class="dp up">▲4</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">46</td><td class="nm">Gui Anhê</td>
-        <td class="tr">172</td>
-        <td class="es"><span class="bar" style="--w:84%"></span><b>479</b></td>
-        <td class="bc">+50</td>
-        <td class="wv"><span class="wbar" style="--w:31%"></span>3.2%</td>
-        <td class="dp up">▲9</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">47</td><td class="nm">Tim Sivieri</td>
-        <td class="tr">210</td>
-        <td class="es"><span class="bar" style="--w:84%"></span><b>478</b></td>
-        <td class="bc">+25</td>
-        <td class="wv"><span class="wbar" style="--w:0%"></span>0.0%</td>
-        <td class="dp down">▼8</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">48</td><td class="nm">Frazatti</td>
-        <td class="tr">213</td>
-        <td class="es"><span class="bar" style="--w:83%"></span><b>473</b></td>
-        <td class="bc">+27</td>
-        <td class="wv"><span class="wbar" style="--w:0%"></span>0.0%</td>
-        <td class="dp down">▼12</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">49</td><td class="nm">Tim Rodolfo</td>
-        <td class="tr">202</td>
-        <td class="es"><span class="bar" style="--w:82%"></span><b>467</b></td>
-        <td class="bc">+11</td>
-        <td class="wv"><span class="wbar" style="--w:10%"></span>1.1%</td>
-        <td class="dp down">▼3</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">50</td><td class="nm">Celmar</td>
-        <td class="tr">193</td>
-        <td class="es"><span class="bar" style="--w:82%"></span><b>466</b></td>
-        <td class="bc">+16</td>
-        <td class="wv"><span class="wbar" style="--w:2%"></span>0.2%</td>
-        <td class="dp up">▲1</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">51</td><td class="nm">Dias</td>
-        <td class="tr">175</td>
-        <td class="es"><span class="bar" style="--w:82%"></span><b>466</b></td>
-        <td class="bc">+28</td>
-        <td class="wv"><span class="wbar" style="--w:0%"></span>0.0%</td>
-        <td class="dp up">▲3</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">52</td><td class="nm">Diniz</td>
-        <td class="tr">198</td>
-        <td class="es"><span class="bar" style="--w:80%"></span><b>456</b></td>
-        <td class="bc">+10</td>
-        <td class="wv"><span class="wbar" style="--w:1%"></span>0.1%</td>
-        <td class="dp down">▼4</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">53</td><td class="nm">Flavio</td>
-        <td class="tr">181</td>
-        <td class="es"><span class="bar" style="--w:80%"></span><b>455</b></td>
-        <td class="bc">+24</td>
-        <td class="wv"><span class="wbar" style="--w:0%"></span>0.0%</td>
-        <td class="dp down">▼1</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">54</td><td class="nm">Elinton</td>
-        <td class="tr">204</td>
-        <td class="es"><span class="bar" style="--w:78%"></span><b>443</b></td>
-        <td class="bc">+27</td>
-        <td class="wv"><span class="wbar" style="--w:0%"></span>0.0%</td>
-        <td class="dp down">▼9</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">55</td><td class="nm">Jupita</td>
-        <td class="tr">168</td>
-        <td class="es"><span class="bar" style="--w:77%"></span><b>437</b></td>
-        <td class="bc">+19</td>
-        <td class="wv"><span class="wbar" style="--w:0%"></span>0.0%</td>
-        <td class="dp up">▲1</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">56</td><td class="nm">Du</td>
-        <td class="tr">181</td>
-        <td class="es"><span class="bar" style="--w:74%"></span><b>418</b></td>
-        <td class="bc">+12</td>
-        <td class="wv"><span class="wbar" style="--w:0%"></span>0.0%</td>
-        <td class="dp down">▼3</td>
-      </tr>
-      <tr class="r">
-        <td class="pos ">57</td><td class="nm">Maria</td>
-        <td class="tr">162</td>
-        <td class="es"><span class="bar" style="--w:73%"></span><b>412</b></td>
-        <td class="bc">+15</td>
-        <td class="wv"><span class="wbar" style="--w:1%"></span>0.1%</td>
-        <td class="dp eq">=</td>
+        <td class="pos ">57</td>
+        <td class="nm">Marcelinho<div class="pod">🏆 🇪🇸 Espanha · 🥈 🇵🇹 Portugal · 🥉 🇫🇷 França · 4º 🇧🇷 Brasil</div></td>
+        <td class="n">15</td>
+        <td class="n">0</td>
+        <td class="n bc"><span class='pend'>a definir</span></td>
+        <td class="n tot">15</td>
       </tr></tbody></table>
 </div>
-<p class="foot">Travado = pontos já garantidos · Esperado = média do total final · Bola Crist. = pontos médios vindos do pódio · Vitória % = cenários em que termina em 1º · Δ pos = salto do ranking travado para o esperado.</p>
+<p class="foot">Enquanto a fase de grupos não fecha (e o mata-mata não decide o pódio), o ranking
+reflete só o confirmado. A Bola de Cristal vale 220 pts no total e reordena tudo no fim:
+o pódio palpitado de cada um está ao lado do nome.</p>
 </body></html>
