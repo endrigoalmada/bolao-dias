@@ -9,9 +9,9 @@ const SRC = [
   { key: "gru", tot: 19, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRrPkk6oyerdtyJL2rftSVBFx9kapsTh-Wgu6n2DX1m1OKnhfYOWzd3k-j_k8OIja58HtZBe0L8ft-P/pub?gid=1652979763&single=true&output=csv" }, // placar grupos
   { key: "gru", tot: 17, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRxSE4KfAYPVm3LOfHPbt_zHLDdIkarkuatwsCCqxIP4raYiwFUJG5FLhXU3_5HXXch5QAt_bbruV8V/pub?gid=1239433766&single=true&output=csv" }, // classif grupos
   { key: "bc",  tot: 14, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQf_V25XGrceSqu0ETDlnJVZA-9NPT7WoJ5mxm2b81bj09QWUvZfjRiJUUxQRUB9HNRFkC9nTaANsj/pub?gid=201491886&single=true&output=csv" },  // bola de cristal
-  { key: "r16", tot: 21, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTPonnWkbjUABjLEWuKMKxCLnk0aAFjH4TxCD1bMFuLEAxnh4bKtmqOGu_gYwAYaFSclWh32e86GQzw/pub?gid=470405565&single=true&output=csv" },   // palpites 16avos (Soma)
+  { key: "r16", tot: 21, ko: true, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTPonnWkbjUABjLEWuKMKxCLnk0aAFjH4TxCD1bMFuLEAxnh4bKtmqOGu_gYwAYaFSclWh32e86GQzw/pub?gid=470405565&single=true&output=csv" },   // palpites 16avos (Soma)
   { key: "r16", tot: 7,  url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQfF9vgNT43fYsj8aXA1W1R20EyxiVvFVazfJ1TdFFkHBTd24jLh6em_RXUtIDy8wcU5yKzSOIqLIPP/pub?gid=1998262955&single=true&output=csv" }, // perguntas 16avos
-  { key: "oit", tot: 21, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpVEon_DDG_YDxKLcdTME2J2YDtUS4UWTsDIZTNsyyuYtrr2bWlVv73pyfqZiEuqfWIVWIOuJSPZ7G/pub?gid=409015852&single=true&output=csv" },   // palpites oitavas (Soma)
+  { key: "oit", tot: 21, ko: true, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpVEon_DDG_YDxKLcdTME2J2YDtUS4UWTsDIZTNsyyuYtrr2bWlVv73pyfqZiEuqfWIVWIOuJSPZ7G/pub?gid=409015852&single=true&output=csv" },   // palpites oitavas (Soma)
   { key: "oit", tot: 8,  url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR9NSZtXT7yZOE41nOqSUE9iklIH7WkbFeb5EdRFKDEt3uVCmEnTof0ND_mb5UXfoKqjnSpo2tieiL3/pub?gid=837919751&single=true&output=csv" },  // perguntas oitavas
 ];
 const NAME_COL = 1;      // coluna do apostador em todas as abas
@@ -51,6 +51,7 @@ function add(name, bucket, val) {
   a[bucket] += val; a.total += val;
 }
 
+const settled = new Set(); // nº dos jogos de mata-mata que o Juliano JA lancou
 let ok = 0;
 for (const s of SRC) {
   try {
@@ -58,6 +59,11 @@ for (const s of SRC) {
     for (const r of rows.slice(4)) {           // pula bloco de titulo/cabecalho
       if (r.length <= s.tot) continue;
       add(r[NAME_COL], s.key, numOf(r[s.tot]));
+      if (s.ko && r.length > 10) {             // jogo "lancado" = Resultado Oficial (col 10) real
+        const m = /^\s*0*(\d+)/.exec(r[0] || "");
+        const rf = (r[10] || "").trim();       // ignora vazio e erros de formula (#N/A, #REF...)
+        if (m && rf && !rf.startsWith("#")) settled.add(+m[1]);
+      }
     }
     ok++;
   } catch (e) { console.error("FALHA numa aba:", e.message); }
@@ -71,7 +77,7 @@ if (ok < SRC.length || names.length < 40) {
 }
 for (const n of names) for (const k of ["total", "gru", "bc", "r16", "oit"]) A[n][k] = Math.round(A[n][k]);
 
-const out = { atualizado: new Date().toISOString(), n: names.length, apostadores: A };
+const out = { atualizado: new Date().toISOString(), n: names.length, settled: [...settled].sort((a, b) => a - b), apostadores: A };
 const prev = (() => { try { return readFileSync("oficial.json", "utf8"); } catch { return ""; } })();
 const next = JSON.stringify(out, null, 0);
 // compara ignorando o timestamp, pra so commitar quando pontuacao muda
