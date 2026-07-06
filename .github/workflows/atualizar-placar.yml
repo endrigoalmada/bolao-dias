@@ -11,6 +11,8 @@ on:
     # melhores momentos da CazeTV. Nada nas horas mortas (08-17 UTC).
     - cron: "30 18-23,0-7 * * *"
     - cron: "0 2-4 * * *"
+    # cobre tambem o dia (BRT) pra pescar quando o Juliano lanca pontos na planilha
+    - cron: "0 11,14,17 * * *"
   workflow_dispatch:
 
 permissions:
@@ -34,11 +36,13 @@ jobs:
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: node scripts/fetch-highlights.mjs
+      - name: Sincronizar totais oficiais (CSV publicados do Juliano)
+        run: node scripts/sync-oficial.mjs
       - name: Commitar se houve mudanca
         run: |
           git config user.name "Placar Bot"
           git config user.email "actions@github.com"
-          git add resultados.json highlights.json
+          git add resultados.json highlights.json oficial.json
           if git diff --staged --quiet; then
             echo "Sem mudancas."
           else
