@@ -14,6 +14,7 @@ const SRC = [
   { key: "oit", tot: 21, ko: true, roc: 10, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpVEon_DDG_YDxKLcdTME2J2YDtUS4UWTsDIZTNsyyuYtrr2bWlVv73pyfqZiEuqfWIVWIOuJSPZ7G/pub?gid=409015852&single=true&output=csv" },   // palpites oitavas (Soma)
   { key: "oit", tot: 8,  url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR9NSZtXT7yZOE41nOqSUE9iklIH7WkbFeb5EdRFKDEt3uVCmEnTof0ND_mb5UXfoKqjnSpo2tieiL3/pub?gid=837919751&single=true&output=csv" },  // perguntas oitavas
   { key: "qua", tot: 22, ko: true, roc: 11, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVuU9I0zWku5rMqD5gShxY5rJMFM3pUHCBsxpTHPUBI-UPs8L83lnha8XrrwS8hKZD3mZ8NBxpOjcv/pub?gid=1836479796&single=true&output=csv" },   // palpites quartas (Soma, coluna deslocada)
+  { key: "qua", tot: 8,  url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGxG3V-3v6jUv4Kf8Q1fZdZEPt1WEes9yZNepXOBYpzEDuP_iLtbpSxtKnwAebwmbX8JfK9RZAEEWV/pub?gid=2061189966&single=true&output=csv" }, // perguntas quartas
 ];
 const NAME_COL = 1;      // coluna do apostador em todas as abas
 const HEADERS = new Set(["nome", "nome apostador", "apostador", "grupo", "id", ""]);
