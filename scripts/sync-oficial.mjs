@@ -13,6 +13,7 @@ const KO = [
   { roc: 10, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpVEon_DDG_YDxKLcdTME2J2YDtUS4UWTsDIZTNsyyuYtrr2bWlVv73pyfqZiEuqfWIVWIOuJSPZ7G/pub?gid=409015852&single=true&output=csv" }, // oitavas
   { roc: 11, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVuU9I0zWku5rMqD5gShxY5rJMFM3pUHCBsxpTHPUBI-UPs8L83lnha8XrrwS8hKZD3mZ8NBxpOjcv/pub?gid=1836479796&single=true&output=csv" }, // quartas
   { roc: 10, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgSB9Fyhr2nED4-v_5cuB4mx_xTdQHW7Pw85AYFVK0SJHycENVy21MGM0uoSJtia5zkoovhd5U3Xg-/pub?gid=1583806495&single=true&output=csv" }, // semi
+  { roc: 13, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-FzKYl6pSpJ69EHXa2feB0FBaodEqspHmLhC6jAr3IZl4AKAHI20pJjO6WMQTyHYkt2upm4QO-RdT/pub?gid=2013029975&single=true&output=csv" }, // 3x4 + final
 ];
 
 // CSV parser RFC4180 (aspas, virgulas e quebras dentro de campo)
